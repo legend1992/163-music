@@ -1,0 +1,79 @@
+/* You can add global styles to this file, and also import other style files */
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  outline: none;
+}
+
+html, body {
+  height: 100%;
+}
+
+html h1,
+html h2,
+html h3,
+html h4,
+html h5,
+html h6 {
+  color: unset;
+  font-weight: unset;
+}
+
+em,
+i {
+  font-style: normal;
+}
+
+input,
+button {
+  outline: 0;
+  border: none;
+  font-size: 16px;
+}
+
+textarea {
+  resize: none;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  display: inline-block;
+  color: #333333;
+  text-decoration: none;
+}
+
+img{
+  vertical-align: top;
+}
+
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+button {
+  cursor: pointer;
+}
+
+.clearfix::after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 5px;
+  background-color: #e2e2e2;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: #777777;
+  border-radius: 10px;
+}
+
+/*# sourceMappingURL=styles.css.map */

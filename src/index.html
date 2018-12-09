@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>个人作品-网易云音乐</title>
+</head>
+<body>
+  <header id="header">网易云音乐-后台管理</header>
+  <main>
+    <aside>
+      <header>新建歌曲</header>
+      <ul class="song-list">
+        <li>歌曲一歌曲一歌曲一歌曲一歌曲一</li>
+        <li>歌曲一</li>
+        <li>歌曲一</li>
+        <li>歌曲一</li>
+        <li>歌曲一</li>
+        <li>歌曲一</li>
+        <li>歌曲一</li>
+        <li>歌曲一</li>
+        <li>歌曲一</li>
+        <li>歌曲一</li>
+        <li>歌曲一</li>
+        <li>歌曲一</li>
+        <li>歌曲一</li>
+        <li>歌曲一</li>
+      </ul>
+    </aside>
+    <section>
+      <h1>新建歌曲</h1>
+      <form>
+        <div class="row">
+          <label>
+            <span>歌名</span><input type="text" placeholder="请输入歌名" name="name">
+          </label>
+        </div>
+        <div class="row">
+          <label>
+            <span>歌手</span><input type="text" placeholder="请输入歌手名" name="singer">
+          </label>
+        </div>
+        <div class="row">
+          <label>
+            <span>歌曲外链</span><input type="text" placeholder="请输入歌曲外链" name="url">
+          </label>
+        </div>
+        <div class="row button-wrapper">
+          <button>提交</button>
+        </div>
+      </form>
+    </section>
+  </main>
+  <footer>
+    上传<br>（点击或拖拽上传）
+  </footer>
+  <script src="//cdn.jsdelivr.net/npm/leancloud-storage@3.11.0/dist/av-min.js"></script>
+  <script>
+    var APP_ID = 'o3NC55gABAwll79UCrKnaCyx-gzGzoHsz';
+    var APP_KEY = 'k2y1XBiRCMC0JHQJ1TtSo2By';
+
+    AV.init({
+      appId: APP_ID,
+      appKey: APP_KEY
+    });
+  </script>
+  <script>
+    // 声明一个 Todo 类型
+    var Todo = AV.Object.extend('Songs');
+    // 新建一个 Todo 对象
+    var todo = new Todo();
+    todo.set('title', '工程师周会');
+    todo.set('content', '每周工程师会议，周一下午2点');
+    todo.save().then(function (todo) {
+      // 成功保存之后，执行其他逻辑.
+      console.log('New object created with objectId: ' + todo.id);
+    }, function (error) {
+      // 异常处理
+      console.error('Failed to create new object, with error message: ' + error.message);
+    });
+  </script>
+</body>
+</html>

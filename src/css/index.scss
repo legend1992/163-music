@@ -1,0 +1,82 @@
+body {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  #header {
+    height: 60px;
+    line-height: 60px;
+    padding: 0 1em;
+    background: red;
+    color: #fff;
+  }
+  main {
+    display: flex;
+    flex-grow: 1;
+    box-shadow: 0 5px 5px #ddd;
+    aside {
+      width: 200px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #bbb;
+      header {
+        padding: 10px 0;
+        text-align: center;
+        border-bottom: 1px solid #000;
+        cursor: pointer;
+      }
+      ul.song-list {
+        flex-grow: 1;
+        overflow: auto;
+        li {
+          padding: 10px 1em;
+          border-bottom: 1px solid #ddd;
+          cursor: pointer;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+    section {
+      flex-grow: 1;
+      padding: 0 50px;
+      h1 {
+        margin: 15px 0;
+        letter-spacing: 5px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #ddd;
+      }
+      form {
+        .row {
+          margin-bottom: 10px;
+          &.button-wrapper {
+            margin-left: 4em;
+          }
+          label {
+            span {
+              display: inline-block;
+              width: 4em;
+              text-align: right;
+            }
+          }
+          input, button {
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-left: 5px;
+          }
+          button {
+            padding: 5px 1em;
+          }
+        }
+      }
+    }
+  }
+  footer {
+    margin: 10px;
+    padding: 30px 10px;
+    border: 2px dashed #ddd;
+    text-align: center;
+    cursor: pointer;
+  }
+}
