@@ -52,6 +52,22 @@ body {
           &.button-wrapper {
             margin-left: 4em;
           }
+          &.require {
+            label {
+              &::after {
+                content: '*';
+                color: red;
+              }
+            }
+          }
+          &.error {
+            input {
+              border-color: red;
+            }
+            .explain {
+              display: block;
+            }
+          }
           label {
             span {
               display: inline-block;
@@ -59,14 +75,26 @@ body {
               text-align: right;
             }
           }
-          input, button {
+          input, span.button {
             border: 1px solid #ddd;
             padding: 5px 10px;
             border-radius: 5px;
             margin-left: 5px;
+            transition: all .3s ease;
           }
-          button {
+          input:focus, span.button:hover {
+            box-shadow: 1px 1px 3px #ddd;
+          }
+          span.button {
+            display: inline-block;
             padding: 5px 1em;
+            cursor: pointer;
+          }
+          .explain {
+            display: none;
+            margin-left: 5em;
+            font-size: 14px;
+            color: red;
           }
         }
       }
