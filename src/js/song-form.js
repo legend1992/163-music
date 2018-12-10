@@ -1,13 +1,6 @@
 import $ from '../../node_modules/jquery/dist/jquery';
-
 const AV = require('leancloud-storage');
-const APP_ID = 'o3NC55gABAwll79UCrKnaCyx-gzGzoHsz';
-const APP_KEY = 'k2y1XBiRCMC0JHQJ1TtSo2By';
-AV.init({
-  appId: APP_ID,
-  appKey: APP_KEY
-});
-const SaveSong = AV.Object.extend('Songs');
+const Songs = AV.Object.extend('Songs');
 
 {
   let view = {
@@ -41,7 +34,6 @@ const SaveSong = AV.Object.extend('Songs');
       this.el.html(this.template)
     },
     highlightInput(key) {
-      console.log('key', key)
       this.el.find(`input[name=${key}]`).closest('.row').addClass('error')
     }
   };
@@ -56,11 +48,11 @@ const SaveSong = AV.Object.extend('Songs');
       }
     },
     save() {
-      let saveSong = new SaveSong();
+      let Songs = new Songs();
       for (let key in this.data.songInfo) {
-        saveSong.set(key, this.data.songInfo[key].value);
+        Songs.set(key, this.data.songInfo[key].value);
       }
-      saveSong.save().then(function (data) {
+      Songs.save().then(function (data) {
         console.log('New object created with objectId: ' + data.id);
       }, function (error) {
         console.error('Failed to save data, with error message: ' + error.message);
@@ -73,9 +65,11 @@ const SaveSong = AV.Object.extend('Songs');
       this.model = model;
       this.view.render();
       this.bindEvents();
+      this.eventHubOn();
     },
     bindEvents() {
-      this.saveSong()
+      this.saveSong();
+      this.inputKeyUp();
     },
     saveSong() {
       this.view.el.find('#save').click(()=> {
@@ -96,6 +90,24 @@ const SaveSong = AV.Object.extend('Songs');
         }
       }
       return verify;
+    },
+    inputKeyUp() {
+      this.view.el.find('.row.require input[type="text"]').keyup((e)=> {
+        let row = $(e.target).closest('.row');
+        if(e.target.value) {
+          if(row.hasClass('error')) {
+            row.removeClass('error')
+          }
+        }else {
+          row.addClass('error')
+        }
+      })
+    },
+    eventHubOn() {
+      window.eventHub.on('edit-song', (data)=> {
+        this.model.data.isAddSong = false;
+        this.model.data.songInfo = data;
+      })
     }
   }
   controller.init(view, model)
