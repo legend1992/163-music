@@ -11,14 +11,15 @@ AV.init({
     el: $('#song-list'),
     template: ``,
     render(list) {
+      let html = this.template;
       if(list.length) {
         list.map((item)=> {
-          this.template += `<li data-song-id=${item.id}>${item.name}</li>`
+          html += `<li data-song-id=${item.id}>${item.name}</li>`
         })
       }else {
-        this.template = '<li>暂无歌曲</li>'
+        html = '<li>暂无歌曲</li>'
       }
-      this.el.html(this.template)
+      this.el.html(html)
     }
   };
   let model = {
@@ -42,9 +43,11 @@ AV.init({
       this.model = model;
       this.findAll();
       this.bindEvents();
+      this.eventHubOn();
     },
     findAll() {
       this.model.findAll().then(()=> {
+        console.log(this.model.data.songList)
         this.view.render(this.model.data.songList)
       })
     },
@@ -52,6 +55,15 @@ AV.init({
       this.view.el.on('click', 'li', (e)=> {
         let index = $(e.target).index();
         window.eventHub.emit('edit-song', JSON.parse(JSON.stringify(this.model.data.songList[index])))
+      })
+    },
+    eventHubOn() {
+      window.eventHub.on('add-success', (data)=> {
+        this.findAll()
+      })
+      window.eventHub.on('modify-success', (data)=> {
+        console.log(data)
+        this.findAll()
       })
     }
   }

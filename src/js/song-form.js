@@ -1,6 +1,7 @@
 import $ from '../../node_modules/jquery/dist/jquery';
+import { patchValue } from './public/public-method';
 const AV = require('leancloud-storage');
-const Songs = AV.Object.extend('Songs');
+const SaveSongsObj = AV.Object.extend('Songs');
 
 {
   let view = {
@@ -10,18 +11,18 @@ const Songs = AV.Object.extend('Songs');
       <form>
         <div class="row require">
           <label>
-            <span>歌名</span><input type="text" placeholder="请输入歌名" name="name">
+            <span>歌名</span><input type="text" placeholder="请输入歌名" name="name" value="__name__">
           </label>
           <div class="explain">请输入歌名</div>
         </div>
         <div class="row">
           <label>
-            <span>歌手</span><input type="text" placeholder="请输入歌手名" name="singer">
+            <span>歌手</span><input type="text" placeholder="请输入歌手名" name="singer" value="__singer__">
           </label>
         </div>
         <div class="row require">
           <label>
-            <span>歌曲外链</span><input type="text" placeholder="请输入歌曲外链" name="url">
+            <span>歌曲外链</span><input type="text" placeholder="请输入歌曲外链" name="url" value="__url__">
           </label>
           <div class="explain">请输入歌曲外链</div>
         </div>
@@ -30,8 +31,12 @@ const Songs = AV.Object.extend('Songs');
         </div>
       </form>
     `,
-    render() {
-      this.el.html(this.template)
+    render(songInfo) {
+      let html = this.template;
+      for(let key in songInfo) {
+        html = html.replace(`__${key}__`, songInfo[key].value)
+      }
+      this.el.html(html)
     },
     highlightInput(key) {
       this.el.find(`input[name=${key}]`).closest('.row').addClass('error')
@@ -39,23 +44,33 @@ const Songs = AV.Object.extend('Songs');
   };
   let model = {
     data: {
-      isAddSong: true,
-      songId: '',
+      songId: undefined,
       songInfo: {
         name: {value:'', require: true},
         singer: {value:''},
         url: {value:'', require: true}
       }
     },
-    save() {
-      let Songs = new Songs();
+    modify() {
+      let Songs = AV.Object.createWithoutData('Songs', this.data.songId);
       for (let key in this.data.songInfo) {
         Songs.set(key, this.data.songInfo[key].value);
       }
       Songs.save().then(function (data) {
-        console.log('New object created with objectId: ' + data.id);
+        window.eventHub.emit('modify-success', data)
       }, function (error) {
-        console.error('Failed to save data, with error message: ' + error.message);
+        console.error('Failed to ModifySongsObj: ' + error.message);
+      })
+    },
+    save() {
+      let Songs = new SaveSongsObj();
+      for (let key in this.data.songInfo) {
+        Songs.set(key, this.data.songInfo[key].value);
+      }
+      Songs.save().then(function (data) {
+        window.eventHub.emit('add-success', data)
+      }, function (error) {
+        console.error('Failed to SaveSongsObj: ' + error.message);
       });
     }
   }
@@ -63,7 +78,7 @@ const Songs = AV.Object.extend('Songs');
     init(view, model) {
       this.view = view;
       this.model = model;
-      this.view.render();
+      this.view.render(this.model.data.songInfo);
       this.bindEvents();
       this.eventHubOn();
     },
@@ -72,12 +87,16 @@ const Songs = AV.Object.extend('Songs');
       this.inputKeyUp();
     },
     saveSong() {
-      this.view.el.find('#save').click(()=> {
+      this.view.el.on('click', '#save',()=> {
         for (let key in this.model.data.songInfo) {
           this.model.data.songInfo[key].value = this.view.el.find(`input[name=${key}]`).val()
         }
         if(this.verifyInfo(this.model.data.songInfo)) {
-          this.model.save();
+          if(this.model.data.songId) {
+            this.model.modify()
+          }else {
+            this.model.save()
+          }
         };
       })
     },
@@ -105,8 +124,9 @@ const Songs = AV.Object.extend('Songs');
     },
     eventHubOn() {
       window.eventHub.on('edit-song', (data)=> {
-        this.model.data.isAddSong = false;
-        this.model.data.songInfo = data;
+        this.model.data.songId = data.id;
+        patchValue(this.model.data.songInfo, data);
+        this.view.render(this.model.data.songInfo);
       })
     }
   }
