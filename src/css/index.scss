@@ -23,6 +23,10 @@ body {
         text-align: center;
         border-bottom: 1px solid #000;
         cursor: pointer;
+        &.active {
+          background: #ff000073;
+          color: #fff;
+        }
       }
       ul.song-list {
         flex-grow: 1;
@@ -34,6 +38,10 @@ body {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          &.active {
+            background: #ff000073;
+            color: #fff;
+          }
         }
       }
     }

@@ -7,7 +7,7 @@ const SaveSongsObj = AV.Object.extend('Songs');
   let view = {
     el: $('#section'),
     template: `
-      <h1>新建歌曲</h1>
+      <h1>__title__</h1>
       <form>
         <div class="row require">
           <label>
@@ -31,8 +31,10 @@ const SaveSongsObj = AV.Object.extend('Songs');
         </div>
       </form>
     `,
-    render(songInfo) {
+    render(songId, songInfo) {
       let html = this.template;
+      let title = songId ? '编辑歌曲' : '新建歌曲';
+      html = html.replace('__title__', title);
       for(let key in songInfo) {
         html = html.replace(`__${key}__`, songInfo[key].value)
       }
@@ -72,13 +74,21 @@ const SaveSongsObj = AV.Object.extend('Songs');
       }, function (error) {
         console.error('Failed to SaveSongsObj: ' + error.message);
       });
+    },
+    reset() {
+      this.data.songId = undefined;
+      this.data.songInfo = {
+        name: {value:'', require: true},
+        singer: {value:''},
+        url: {value:'', require: true}
+      }
     }
   }
   let controller = {
     init(view, model) {
       this.view = view;
       this.model = model;
-      this.view.render(this.model.data.songInfo);
+      this.view.render(this.model.data.songId, this.model.data.songInfo);
       this.bindEvents();
       this.eventHubOn();
     },
@@ -125,8 +135,14 @@ const SaveSongsObj = AV.Object.extend('Songs');
     eventHubOn() {
       window.eventHub.on('edit-song', (data)=> {
         this.model.data.songId = data.id;
-        patchValue(this.model.data.songInfo, data);
-        this.view.render(this.model.data.songInfo);
+        let { songId, songInfo } = this.model.data;
+        patchValue(songInfo, data);
+        this.view.render(songId, songInfo);
+      })
+      window.eventHub.on('create-song', ()=> {
+        this.model.reset();
+        let { songId, songInfo } = this.model.data;
+        this.view.render(songId, songInfo);
       })
     }
   }
