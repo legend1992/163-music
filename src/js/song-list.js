@@ -16,11 +16,13 @@ AV.init({
     render(selectedIdx, list) {
       let html = this.template;
       if(list.length) {
+        html += '<ul>';
         list.map((item, key)=> {
           html += `<li class="${key===selectedIdx ? 'active' : ''}" data-song-id=${item.id}>${item.name}</li>`
         })
+        html += '</ul>';
       }else {
-        html = '<li>暂无歌曲</li>'
+        html = '<ul><li>暂无歌曲</li></ul>'
       }
       this.el.html(html)
     }
@@ -50,10 +52,16 @@ AV.init({
       this.eventHubOn();
     },
     findAll() {
-      this.model.findAll().then(()=> {
-        let { selectedIdx, songList } = this.model.data;
-        this.view.render(selectedIdx, songList);
-      })
+      this.loading();
+      setTimeout(() => {
+        this.model.findAll().then(()=> {
+          let { selectedIdx, songList } = this.model.data;
+          this.view.render(selectedIdx, songList);
+        })
+      }, 500);
+    },
+    loading() {
+      this.view.el.append('<div class="loader-wrapper1"><div class="loader">Loading...</div></div>');
     },
     bindEvents() {
       this.view.el.on('click', 'li', (e)=> {

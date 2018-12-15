@@ -2,6 +2,7 @@ body {
   display: flex;
   flex-direction: column;
   font-size: 16px;
+  overflow: hidden;
   #header {
     height: 60px;
     line-height: 60px;
@@ -19,16 +20,35 @@ body {
       flex-direction: column;
       border-right: 1px solid #bbb;
       header {
+        position: relative;
         padding: 10px 0;
         text-align: center;
-        border-bottom: 1px solid #000;
+        border-bottom: 2px solid #bbb;
         cursor: pointer;
+        &:before, &:after {
+          content: '';
+          height: 2px;
+          width: 0;
+          position: absolute;
+          bottom: -2px;
+          transition: all .2s ease-in-out;
+          background: red;
+        }
+        &:before {
+          left: 0;
+        }
+        &:after {
+          right: 0;
+        }
         &.active {
-          background: #ff000073;
-          color: #fff;
+          color: red;
+          &:before, &:after {
+            width: 50%;
+          }
         }
       }
-      ul.song-list {
+      .song-list {
+        position: relative;
         flex-grow: 1;
         overflow: auto;
         li {
@@ -38,9 +58,9 @@ body {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          border-left: 5px solid transparent;
           &.active {
-            background: #ff000073;
-            color: #fff;
+            border-left-color: #ff0000;
           }
         }
       }
@@ -94,9 +114,21 @@ body {
             box-shadow: 1px 1px 3px #ddd;
           }
           span.button {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
             padding: 5px 1em;
             cursor: pointer;
+            &.loading {
+              background: rgba($color: #ddd, $alpha: 1);
+              color: #fff;
+              cursor: not-allowed;
+              .loader {
+                width: 16px;
+                height: 16px;
+                border: 2px solid red;
+                border-left-color: rgba(255, 255, 255, .2);
+              }
+            }
           }
           .explain {
             display: none;

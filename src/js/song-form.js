@@ -27,7 +27,7 @@ const SaveSongsObj = AV.Object.extend('Songs');
           <div class="explain">请输入歌曲外链</div>
         </div>
         <div class="row button-wrapper">
-          <span id="save" class="button">提交</span>
+          <span id="save" class="button"><div class="loader-wrapper2"><div class="loader">Loading...</div></div>提交</span>
         </div>
       </form>
     `,
@@ -42,6 +42,16 @@ const SaveSongsObj = AV.Object.extend('Songs');
     },
     highlightInput(key) {
       this.el.find(`input[name=${key}]`).closest('.row').addClass('error')
+    },
+    downplayInput(e) {
+      let row = $(e.target).closest('.row');
+      if(e.target.value) {
+        if(row.hasClass('error')) {
+          row.removeClass('error')
+        }
+      }else {
+        row.addClass('error')
+      }
     }
   };
   let model = {
@@ -58,8 +68,8 @@ const SaveSongsObj = AV.Object.extend('Songs');
       for (let key in this.data.songInfo) {
         Songs.set(key, this.data.songInfo[key].value);
       }
-      Songs.save().then(function (data) {
-        window.eventHub.emit('modify-success', data)
+      return Songs.save().then(function (data) {
+        return data
       }, function (error) {
         console.error('Failed to ModifySongsObj: ' + error.message);
       })
@@ -69,8 +79,8 @@ const SaveSongsObj = AV.Object.extend('Songs');
       for (let key in this.data.songInfo) {
         Songs.set(key, this.data.songInfo[key].value);
       }
-      Songs.save().then(function (data) {
-        window.eventHub.emit('add-success', data)
+      return Songs.save().then(function (data) {
+        return data
       }, function (error) {
         console.error('Failed to SaveSongsObj: ' + error.message);
       });
@@ -97,18 +107,33 @@ const SaveSongsObj = AV.Object.extend('Songs');
       this.inputKeyUp();
     },
     saveSong() {
-      this.view.el.on('click', '#save',()=> {
+      this.view.el.on('click', '#save',(e)=> {
         for (let key in this.model.data.songInfo) {
           this.model.data.songInfo[key].value = this.view.el.find(`input[name=${key}]`).val()
         }
         if(this.verifyInfo(this.model.data.songInfo)) {
+          this.loading(e);
           if(this.model.data.songId) {
-            this.model.modify()
+            this.model.modify().then((data)=> {
+              window.eventHub.emit('modify-success', data);
+              this.unLoading(e);
+            })
           }else {
-            this.model.save()
+            this.model.save().then((data)=> {
+              window.eventHub.emit('add-success', data);
+              this.unLoading(e);
+            })
           }
-        };
+        }
       })
+    },
+    loading(e) {
+      $(e.target).addClass('loading');
+    },
+    unLoading(e) {
+      setTimeout(() => {
+        $(e.target).removeClass('loading');
+      }, 500);
     },
     verifyInfo(songInfo) {
       let verify = true;
@@ -121,15 +146,8 @@ const SaveSongsObj = AV.Object.extend('Songs');
       return verify;
     },
     inputKeyUp() {
-      this.view.el.find('.row.require input[type="text"]').keyup((e)=> {
-        let row = $(e.target).closest('.row');
-        if(e.target.value) {
-          if(row.hasClass('error')) {
-            row.removeClass('error')
-          }
-        }else {
-          row.addClass('error')
-        }
+      this.view.el.on('keyup', '.row.require input[type="text"]', (e)=> {
+        this.view.downplayInput(e)
       })
     },
     eventHubOn() {
