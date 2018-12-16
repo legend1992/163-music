@@ -3,38 +3,62 @@ import * as qiniu from 'qiniu-js';
 
 {
   let view = {
-    el: $('#footer')
+    el: $('#footer'),
+    render(config, isSuccess=false) {
+      let pEle = this.el.find('.input-wrapper').find('p');
+      let inputEle = this.el.find('input[type=file]');
+      let { text, showInput, percent } = config;
+      if(isSuccess) {
+        pEle.text('上传成功')
+        setTimeout(()=> {
+          pEle.text(text)
+        }, 1000)
+      }else {
+        pEle.text(text)
+      }
+      if(showInput) {
+        inputEle.show()
+      }else {
+        inputEle.hide()
+      }
+      this.drawProgress(percent);
+    },
+    drawProgress(percent) {
+      this.el.find('.progress').css({
+        width: `${percent}%`,
+        opacity: `${percent/100}`
+      })
+    }
   };
   let model = {
-    data: {
-
-    }
+    data: {}
   };
   let controller = {
     init(view, model) {
       this.view = view;
       this.model = model;
-      this.bindEvents();
       this.getToken();
     },
-    bindEvents() {
-      this.view.el.find('input[type="file"]').on('change', (e) => {
-        console.log(e)
-      })
+    uploadSuccess(res) {
+      window.eventHub.emit('upload-success', res);
+      this.view.render({
+        text: '上传（点击或拖拽上传）',
+        showInput: true,
+        percent: 0
+      }, true)
     },
     getToken() {
       $.ajax({
         url: "http://localhost:8888/api/uptoken",
         success: (res) => {
-          console.log(JSON.parse(res), typeof JSON.parse(res))
           let { token } = JSON.parse(res);
-          var config = {
+          let config = {
             useCdnDomain: false,
             disableStatisticsReport: false,
             retryCount: 6,
             region: undefined
           };
-          var putExtra = {
+          let putExtra = {
             fname: "",
             params: {},
             mimeType: null
@@ -44,99 +68,29 @@ import * as qiniu from 'qiniu-js';
       })
     },
     uploadWithSDK(token, putExtra, config) {
-      $("#select2").unbind("change").bind("change", function () {
-        var file = this.files[0];
-        var finishedAttr = [];
-        var compareChunks = [];
-        var observable;
+      $("#select-file").on("change", (e)=> {
+        let file = e.target.files[0];
         if (file) {
-          var key = file.name;
-          // 添加上传dom面板
-          // var board = addUploadBoard(file, config, key, "");
-          // if (!board) {
-          //   return;
-          // }
-          // putExtra.params["x:name"] = key.split(".")[0];
-          // board.start = true;
-          // var dom_total = $(board)
-          //   .find("#totalBar")
-          //   .children("#totalBarColor");
-          // 设置next,error,complete对应的操作，分别处理相应的进度信息，错误信息，以及完成后的操作
-          var error = function (err) {
-            // board.start = true;
-            // $(board).find(".control-upload").text("继续上传");
-            console.log(err);
-            alert("上传出错")
-          };
-          var complete = function (res) {
-            console.log(res)
-          };
-          var next = function (response) {
-            var chunks = response.chunks || [];
-            // var total = response.total;
-            // 这里对每个chunk更新进度，并记录已经更新好的避免重复更新，同时对未开始更新的跳过
-            for (var i = 0; i < chunks.length; i++) {
-              if (chunks[i].percent === 0 || finishedAttr[i]) {
-                continue;
-              }
-              if (compareChunks[i].percent === chunks[i].percent) {
-                continue;
-              }
-              if (chunks[i].percent === 100) {
-                finishedAttr[i] = true;
-              }
-              // $(board)
-              //   .find(".fragment-group li")
-              //   .eq(i)
-              //   .find("#childBarColor")
-              //   .css(
-              //     "width",
-              //     chunks[i].percent + "%"
-              //   );
+          let observable = qiniu.upload(file, file.name, token, putExtra, config);
+          observable.subscribe(
+            (res)=> {
+              this.view.drawProgress(res.total.percent);
+            },
+            (err)=> {
+              alert("上传出错", err)
+            },
+            (res)=> {
+              this.uploadSuccess(res);
             }
-            // $(board)
-            //   .find(".speed")
-            //   .text("进度：" + total.percent + "% ");
-            // dom_total.css(
-            //   "width",
-            //   total.percent + "%"
-            // );
-            compareChunks = chunks;
-          };
-          var subObject = {
-            next: next,
-            error: error,
-            complete: complete
-          };
-          var subscription;
-          // 调用sdk上传接口获得相应的observable，控制上传和暂停
-          observable = qiniu.upload(file, key, token, putExtra, config);
-          // $(board)
-          //   .find(".control-upload")
-          //   .on("click", function() {
-          //     if(board.start){
-          //       $(this).text("暂停上传");
-          //       board.start = false;
-                subscription = observable.subscribe(subObject);
-          //     }else{
-          //       board.start = true;
-          //       $(this).text("继续上传");
-          //       subscription.unsubscribe();
-          //     }
-          //   });
+          )
+          this.view.render({
+            text: '上传中...',
+            showInput: false,
+            percent: 0
+          })
         }
       })
     }
   }
   controller.init(view, model)
 }
-// var observable = qiniu.upload(file, key, token, putExtra, config)
-// var subscription = observable.subscribe((data)=> {
-//   console.log('next', data)
-// }, (data)=> {
-//   console.log('error', data)
-// }, (data)=> {
-//   console.log('complete', data)
-// }) // 这样传参形式也可以
-// 上传取消
-// subscription.unsubscribe()

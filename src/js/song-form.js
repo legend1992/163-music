@@ -32,7 +32,8 @@ const SaveSongsObj = AV.Object.extend('Songs');
         </div>
       </form>
     `,
-    render(songId, songInfo) {
+    render(data) {
+      let { songId, songInfo } = data;
       let html = this.template;
       let title = songId ? '编辑歌曲' : '新建歌曲';
       html = html.replace('__title__', title);
@@ -105,7 +106,7 @@ const SaveSongsObj = AV.Object.extend('Songs');
     init(view, model) {
       this.view = view;
       this.model = model;
-      this.view.render(this.model.data.songId, this.model.data.songInfo);
+      this.view.render(this.model.data);
       this.bindEvents();
       this.eventHubOn();
     },
@@ -156,18 +157,23 @@ const SaveSongsObj = AV.Object.extend('Songs');
     eventHubOn() {
       window.eventHub.on('edit-song', (data)=> {
         this.model.data.songId = data.id;
-        let { songId, songInfo } = this.model.data;
-        patchValue(songInfo, data);
-        this.view.render(songId, songInfo);
+        patchValue(this.model.data.songInfo, data);
+        this.view.render(this.model.data);
       })
       window.eventHub.on('create-song', ()=> {
         this.reset()
       })
+      window.eventHub.on('upload-success', (res)=> {
+        patchValue(this.model.data.songInfo, {
+          name: res.key,
+          url: `http://pjrjfrnv0.bkt.clouddn.com/${encodeURIComponent(res.key)}`
+        });
+        this.view.render(this.model.data)
+      })
     },
     reset() {
       this.model.reset();
-      let { songId, songInfo } = this.model.data;
-      this.view.render(songId, songInfo);
+      this.view.render(this.model.data);
     }
   }
   controller.init(view, model)
