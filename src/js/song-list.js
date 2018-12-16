@@ -66,12 +66,10 @@ AV.init({
     bindEvents() {
       this.view.el.on('click', 'li', (e)=> {
         let index = $(e.target).index();
-        if(this.model.data.selectedIdx !== index) {
-          this.model.data.selectedIdx = index;
-          let { selectedIdx, songList } = this.model.data;
-          this.view.render(selectedIdx, songList);
-          window.eventHub.emit('edit-song', JSON.parse(JSON.stringify(this.model.data.songList[index])))
-        }
+        this.model.data.selectedIdx = index;
+        let { selectedIdx, songList } = this.model.data;
+        this.view.render(selectedIdx, songList);
+        window.eventHub.emit('edit-song', JSON.parse(JSON.stringify(this.model.data.songList[index])))
       })
     },
     eventHubOn() {
@@ -82,10 +80,13 @@ AV.init({
         this.findAll()
       })
       window.eventHub.on('create-song', ()=> {
-        this.model.data.selectedIdx = -1;
-        let { selectedIdx, songList } = this.model.data;
-        this.view.render(selectedIdx, songList);
+        this.reset()
       })
+    },
+    reset() {
+      this.model.data.selectedIdx = -1;
+      let { selectedIdx, songList } = this.model.data;
+      this.view.render(selectedIdx, songList);
     }
   }
   controller.init(view, model)

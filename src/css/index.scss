@@ -40,7 +40,7 @@ body {
         &:after {
           right: 0;
         }
-        &.active {
+        &.active, &:hover {
           color: red;
           &:before, &:after {
             width: 50%;
@@ -59,7 +59,7 @@ body {
           text-overflow: ellipsis;
           white-space: nowrap;
           border-left: 5px solid transparent;
-          &.active {
+          &.active, &:hover {
             border-left-color: #ff0000;
           }
         }

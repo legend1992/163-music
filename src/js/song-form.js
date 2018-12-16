@@ -1,5 +1,6 @@
 import $ from '../../node_modules/jquery/dist/jquery';
 import { patchValue } from './public/public-method';
+import { fromByteArray } from 'ipaddr.js';
 const AV = require('leancloud-storage');
 const SaveSongsObj = AV.Object.extend('Songs');
 
@@ -52,6 +53,12 @@ const SaveSongsObj = AV.Object.extend('Songs');
       }else {
         row.addClass('error')
       }
+    },
+    unLoading() {
+      $('#save').removeClass('loading');
+    },
+    loading() {
+      $('#save').addClass('loading');
     }
   };
   let model = {
@@ -112,28 +119,24 @@ const SaveSongsObj = AV.Object.extend('Songs');
           this.model.data.songInfo[key].value = this.view.el.find(`input[name=${key}]`).val()
         }
         if(this.verifyInfo(this.model.data.songInfo)) {
-          this.loading(e);
+          this.view.loading();
           if(this.model.data.songId) {
             this.model.modify().then((data)=> {
-              window.eventHub.emit('modify-success', data);
-              this.unLoading(e);
+              setTimeout(() => {
+                window.eventHub.emit('modify-success', data);
+                this.view.unLoading()
+              }, 500);
             })
           }else {
             this.model.save().then((data)=> {
-              window.eventHub.emit('add-success', data);
-              this.unLoading(e);
+              setTimeout(() => {
+                window.eventHub.emit('add-success', data);
+                this.reset()
+              }, 500);
             })
           }
         }
       })
-    },
-    loading(e) {
-      $(e.target).addClass('loading');
-    },
-    unLoading(e) {
-      setTimeout(() => {
-        $(e.target).removeClass('loading');
-      }, 500);
     },
     verifyInfo(songInfo) {
       let verify = true;
@@ -158,10 +161,13 @@ const SaveSongsObj = AV.Object.extend('Songs');
         this.view.render(songId, songInfo);
       })
       window.eventHub.on('create-song', ()=> {
-        this.model.reset();
-        let { songId, songInfo } = this.model.data;
-        this.view.render(songId, songInfo);
+        this.reset()
       })
+    },
+    reset() {
+      this.model.reset();
+      let { songId, songInfo } = this.model.data;
+      this.view.render(songId, songInfo);
     }
   }
   controller.init(view, model)
