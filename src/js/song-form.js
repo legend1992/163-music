@@ -69,7 +69,8 @@ const SaveSongsObj = AV.Object.extend('Songs');
         name: {value:'', require: true},
         singer: {value:''},
         url: {value:'', require: true}
-      }
+      },
+      loading: false
     },
     modify() {
       let Songs = AV.Object.createWithoutData('Songs', this.data.songId);
@@ -94,11 +95,14 @@ const SaveSongsObj = AV.Object.extend('Songs');
       });
     },
     reset() {
-      this.data.songId = undefined;
-      this.data.songInfo = {
-        name: {value:'', require: true},
-        singer: {value:''},
-        url: {value:'', require: true}
+      this.data = {
+        songId: undefined,
+        songInfo: {
+          name: {value:'', require: true},
+          singer: {value:''},
+          url: {value:'', require: true}
+        },
+        loading: false
       }
     }
   }
@@ -119,11 +123,13 @@ const SaveSongsObj = AV.Object.extend('Songs');
         for (let key in this.model.data.songInfo) {
           this.model.data.songInfo[key].value = this.view.el.find(`input[name=${key}]`).val()
         }
-        if(this.verifyInfo(this.model.data.songInfo)) {
+        if(this.verifyInfo(this.model.data.songInfo) && !this.loading) {
+          this.loading = true;
           this.view.loading();
           if(this.model.data.songId) {
             this.model.modify().then((data)=> {
               setTimeout(() => {
+                this.loading = false;
                 window.eventHub.emit('modify-success', data);
                 this.view.unLoading()
               }, 500);
