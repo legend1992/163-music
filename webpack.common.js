@@ -9,35 +9,26 @@ const minifyConfig = {
   removeScriptTypeAttributes: true,
   removeStyleLinkTypeAttributes: true
 };
-// const getHtmlConfig = function (name, chunks, path=name) {
-//   return {
-//     template: `./src/template/${path}/${name}.html`,
-//     filename: `${name}.html`,
-//     // favicon: './src/favicon.ico',
-//     chunks: chunks,
-//     minify: process.env.NODE_ENV === "development" ? false : minifyConfig
-//   }
-// };
-// const htmlArray = [
-//   // {
-//   //   name: 'news',
-//   //   chunks: ['vendor', 'main', 'news']
-//   // }, {
-//   //   name: 'news-detail',
-//   //   chunks: ['vendor', 'main', 'newsDetail'],
-//   //   path: 'news'
-//   // }, {
-//   //   name: 'contactUs',
-//   //   chunks: ['vendor', 'main', 'contactUs']
-//   // }
-// ];
+const getHtmlConfig = function (name, chunks) {
+  return {
+    template: `./src/template/${name}.html`,
+    filename: `${name}.html`,
+    favicon: './src/favicon.ico',
+    chunks: chunks,
+    minify: process.env.NODE_ENV === "development" ? false : minifyConfig
+  }
+};
+const htmlArray = [
+  {
+    name: 'admin',
+    chunks: ['vendor', 'main', 'admin']
+  }
+];
 module.exports = {
   entry: {
     main: './src/js/main.js',
     index: './src/js/index.js',
-    // news: './src/js/news/news.js',
-    // newsDetail: './src/js/news/newsDetail.js',
-    // contactUs: './src/js/contactUs/contactUs.js'
+    admin: './src/js/admin/admin.js'
   },
   // 提取公共代码
   optimization: {
@@ -56,7 +47,7 @@ module.exports = {
     new CleanWebpackPlugin(['dist']),
     new HtmlWebpackPlugin({
       template: __dirname + "/src/index.html",
-      // favicon: './src/favicon.ico',
+      favicon: './src/favicon.ico',
       chunks: ['vendor', 'main', 'index'],
       minify: process.env.NODE_ENV === "development" ? false : minifyConfig
     }),
@@ -106,6 +97,6 @@ module.exports = {
   },
   mode: "development"
 };
-// htmlArray.forEach((template) => {
-//   module.exports.plugins.push(new HtmlWebpackPlugin(getHtmlConfig(template.name, template.chunks, template.path)));
-// })
+htmlArray.forEach((template) => {
+  module.exports.plugins.push(new HtmlWebpackPlugin(getHtmlConfig(template.name, template.chunks)));
+})

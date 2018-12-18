@@ -1,5 +1,5 @@
-import $ from '../../node_modules/jquery/dist/jquery';
-import { patchValue } from './public/public-method';
+import $ from '../../../node_modules/jquery/dist/jquery';
+import { patchValue } from '../public/public-method';
 const AV = require('leancloud-storage');
 const SaveSongsObj = AV.Object.extend('Songs');
 

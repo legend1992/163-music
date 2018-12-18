@@ -1,4 +1,4 @@
-import $ from '../../node_modules/jquery/dist/jquery';
+import $ from '../../../node_modules/jquery/dist/jquery';
 import * as qiniu from 'qiniu-js';
 
 {

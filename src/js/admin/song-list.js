@@ -1,7 +1,7 @@
 /**
  * this.model.data.selectedIdx可优化，直接改变被选中的li的class即可，每次重新渲染开销比较大
  */
-import $ from '../../node_modules/jquery/dist/jquery';
+import $ from '../../../node_modules/jquery/dist/jquery';
 const APP_ID = 'o3NC55gABAwll79UCrKnaCyx-gzGzoHsz';
 const APP_KEY = 'k2y1XBiRCMC0JHQJ1TtSo2By';
 const AV = require('leancloud-storage');
@@ -18,7 +18,7 @@ AV.init({
       if(list.length) {
         html += '<ul>';
         list.map((item, key)=> {
-          html += `<li class="${key===selectedIdx ? 'active' : ''}" data-song-id=${item.id}>${item.name}</li>`
+          html += `<li class="${key===selectedIdx ? 'active' : ''}" data-song-id=${item.id} title="${item.name}">${item.name}</li>`
         })
         html += '</ul>';
       }else {
