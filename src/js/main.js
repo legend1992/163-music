@@ -1,1 +1,1 @@
-import '../css/reset.scss';
+import '../css/public/reset.scss';

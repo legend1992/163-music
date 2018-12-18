@@ -1,5 +1,5 @@
 import '../../css/admin/admin.scss';
-import '../../css/admin/icon.scss';
+import '../../css/public/icon.scss';
 import '../public/event-hub';
 import './song-upload';
 import './song-create';

@@ -162,7 +162,7 @@ main {
           h4 {
             font-size: .34rem;
             line-height: 1.48;
-            span {
+            span.remark {
               color: #888;
               margin-left: .08rem;
             }
@@ -193,6 +193,27 @@ main {
             background-position: -.48rem 0;
           }
         }
+        .loader-wrapper1 {
+          position: relative;
+          min-height: 1rem;
+          .loader {
+            &, &:before, &:after {
+              width: .1rem;
+              height: .24rem;
+              animation: index-load1 1s infinite ease-in-out;
+            }
+            & {
+              animation-delay: -0.16s;
+            }
+            &:before {
+              left: -.36rem;
+              animation-delay: -0.32s;
+            }
+            &:after {
+              left: .36rem;
+            }
+          }
+        }
       }
     }
   }
@@ -213,5 +234,17 @@ footer {
       width: 4.6rem;
       height: .88rem;
     }
+  }
+}
+@keyframes index-load1 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 0;
+    height: .2rem;
+  }
+  40% {
+    box-shadow: 0 -.2rem;
+    height: .24rem;
   }
 }

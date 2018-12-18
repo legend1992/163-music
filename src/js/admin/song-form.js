@@ -20,6 +20,11 @@ const SaveSongsObj = AV.Object.extend('Songs');
             <span>歌手</span><input type="text" placeholder="请输入歌手名" name="singer" value="__singer__">
           </label>
         </div>
+        <div class="row">
+          <label>
+            <span>专辑</span><input type="text" placeholder="请输入专辑名" name="album" value="__album__">
+          </label>
+        </div>
         <div class="row require">
           <label>
             <span>歌曲外链</span><input type="text" placeholder="请输入歌曲外链" name="url" value="__url__">
@@ -67,6 +72,7 @@ const SaveSongsObj = AV.Object.extend('Songs');
       songInfo: {
         name: {value:'', require: true},
         singer: {value:''},
+        album: {value:''},
         url: {value:'', require: true}
       },
       loading: false
@@ -99,6 +105,7 @@ const SaveSongsObj = AV.Object.extend('Songs');
         songInfo: {
           name: {value:'', require: true},
           singer: {value:''},
+          album: {value:''},
           url: {value:'', require: true}
         },
         loading: false

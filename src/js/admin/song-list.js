@@ -19,7 +19,7 @@ AV.init({
         html += '<ul>';
         list.map((item, key)=> {
           html += `<li class="${key===selectedIdx ? 'active' : ''}" data-song-id=${item.id} title="${item.name}">${item.name}
-            <svg class="icon" aria-hidden="true" title="删除">
+            <svg class="ali-icon" aria-hidden="true" title="删除">
               <use xlink:href="#icon-delete"></use>
             </svg>
           </li>`
