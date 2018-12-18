@@ -7,8 +7,11 @@
   outline: none;
 }
 
-html, body {
+html {
   height: 100%;
+}
+body {
+  min-height: 100%;
 }
 
 html h1,
@@ -64,6 +67,14 @@ button {
   content: '';
   display: block;
   clear: both;
+}
+
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
 }
 
 .scrollbar::-webkit-scrollbar {

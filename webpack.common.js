@@ -27,7 +27,7 @@ const htmlArray = [
 module.exports = {
   entry: {
     main: './src/js/main.js',
-    index: './src/js/index.js',
+    index: './src/js/index/index.js',
     admin: './src/js/admin/admin.js'
   },
   // 提取公共代码
