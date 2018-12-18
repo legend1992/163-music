@@ -7,7 +7,6 @@ const SaveSongsObj = AV.Object.extend('Songs');
   let view = {
     el: $('#section'),
     template: `
-    <div class="wrapper">
       <h1>__title__</h1>
       <form>
         <div class="row require">
@@ -31,7 +30,6 @@ const SaveSongsObj = AV.Object.extend('Songs');
           <span id="save" class="button"><div class="loader-wrapper2"><div class="loader">Loading...</div></div>提交</span>
         </div>
       </form>
-      </div>
     `,
     render(data) {
       let { songId, songInfo } = data;
