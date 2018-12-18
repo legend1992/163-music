@@ -84,6 +84,20 @@ body {
               height: 50%;
             }
           }
+          .icon {
+            display: none;
+            position: absolute;
+            right: 1em;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            background: #fff;
+          }
+          &:hover {
+            .icon {
+              display: block;
+            }
+          }
         }
       }
     }

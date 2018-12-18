@@ -72,11 +72,11 @@ const SaveSongsObj = AV.Object.extend('Songs');
       loading: false
     },
     modify() {
-      let Songs = AV.Object.createWithoutData('Songs', this.data.songId);
+      let song = AV.Object.createWithoutData('Songs', this.data.songId);
       for (let key in this.data.songInfo) {
-        Songs.set(key, this.data.songInfo[key].value);
+        song.set(key, this.data.songInfo[key].value);
       }
-      return Songs.save().then(function (data) {
+      return song.save().then(function (data) {
         return data
       }, function (error) {
         console.error('Failed to ModifySongsObj: ' + error.message);

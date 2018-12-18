@@ -18,7 +18,11 @@ AV.init({
       if(list.length) {
         html += '<ul>';
         list.map((item, key)=> {
-          html += `<li class="${key===selectedIdx ? 'active' : ''}" data-song-id=${item.id} title="${item.name}">${item.name}</li>`
+          html += `<li class="${key===selectedIdx ? 'active' : ''}" data-song-id=${item.id} title="${item.name}">${item.name}
+            <svg class="icon" aria-hidden="true" title="删除">
+              <use xlink:href="#icon-delete"></use>
+            </svg>
+          </li>`
         })
         html += '</ul>';
       }else {
@@ -41,6 +45,14 @@ AV.init({
       }, function (error) {
         console.error('歌曲列表获取失败:', error)
       });
+    },
+    deleteSong(id) {
+      let song = AV.Object.createWithoutData('Songs', id);
+      return song.destroy().then(function (success) {
+        return success
+      }, function (error) {
+        return error
+      })
     }
   }
   let controller = {
@@ -61,15 +73,31 @@ AV.init({
       }, 500);
     },
     loading() {
-      this.view.el.append('<div class="loader-wrapper1"><div class="loader">Loading...</div></div>');
+      if(!this.view.el.find('.loader-wrapper1').length) {
+        this.view.el.append('<div class="loader-wrapper1"><div class="loader">Loading...</div></div>');
+      }
     },
     bindEvents() {
       this.view.el.on('click', 'li', (e)=> {
-        let index = $(e.target).index();
-        this.model.data.selectedIdx = index;
-        let { selectedIdx, songList } = this.model.data;
-        this.view.render(selectedIdx, songList);
-        window.eventHub.emit('edit-song', JSON.parse(JSON.stringify(this.model.data.songList[index])))
+        if(e.target.nodeName==='LI') {
+          let index = $(e.target).index();
+          this.model.data.selectedIdx = index;
+          let { selectedIdx, songList } = this.model.data;
+          this.view.render(selectedIdx, songList);
+          window.eventHub.emit('edit-song', JSON.parse(JSON.stringify(this.model.data.songList[index])))
+        }else {
+          let songId = $(e.currentTarget).attr('data-song-id');
+          this.deleteSong(songId)
+        }
+      })
+    },
+    deleteSong(songId) {
+      this.loading();
+      this.model.deleteSong(songId).then((success)=> {
+        console.log('删除成功');
+        this.findAll()
+      }, (error)=> {
+        console.log(error)
       })
     },
     eventHubOn() {
