@@ -1,7 +1,7 @@
-import $ from '../../../node_modules/jquery/dist/jquery';
+import $ from 'jquery';
 {
   let view = {
-    el: $('#aside>header')
+    el: $('#songs-create')
   };
   let model = {};
   let controller = {
@@ -15,12 +15,12 @@ import $ from '../../../node_modules/jquery/dist/jquery';
       this.view.el.on('click', (e)=> {
         if(!$(e.target).hasClass('active')) {
           $(e.target).addClass('active');
-          window.eventHub.emit('create-song');
+          window.eventHub.emit('create-songs');
         }
       })
     },
     eventHubOn() {
-      window.eventHub.on('edit-song', ()=> {
+      window.eventHub.on('edit-songs', ()=> {
         this.view.el.removeClass('active')
       })
     }

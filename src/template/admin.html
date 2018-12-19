@@ -8,12 +8,41 @@
 </head>
 <body>
   <header id="header">网易云音乐-后台管理</header>
-  <main>
+  <main id="main">
+    <nav id="menu">
+      <ul>
+        <li class="active nav-item" data-menu="song-manage">
+          <svg class="ali-icon" aria-hidden="true">
+            <use xlink:href="#icon-gedanguanli"></use>
+          </svg>
+          <br>
+          歌曲管理</li>
+        <li class="nav-item" data-menu="songs-manage">
+          <svg class="ali-icon" aria-hidden="true">
+            <use xlink:href="#icon-jiarugedan"></use>
+          </svg>
+          <br>
+          歌单管理</li>
+      </ul>
+    </nav>
     <aside id="aside">
-      <header class="active">新建歌曲</header>
-      <div id="song-list" class="song-list"></div>
+      <ul class="first-level">
+        <li class="active">
+          <header id="song-create" class="active">新建歌曲</header>
+          <div id="song-list" class="song-list"></div>
+        </li>
+        <li>
+          <header id="songs-create" class="active">新建歌单</header>
+          <div id="songs-list" class="song-list">songs-list</div>
+        </li>
+      </ul>
     </aside>
-    <section id="section"></section>
+    <section id="section-wrapper">
+      <ul class="first-level">
+        <li class="active"><section id="song-form-section"></section></li>
+        <li><section id="songs-form-section"></section></li>
+      </ul>
+    </section>
   </main>
   <footer id="footer">
     <div class="input-wrapper">
@@ -22,6 +51,6 @@
       <div class="progress"></div>
     </div>
   </footer>
-  <script src="//at.alicdn.com/t/font_967149_q7hahqk4atq.js"></script>
+  <script src="//at.alicdn.com/t/font_967149_0fmwhzku9ld7.js"></script>
 </body>
 </html>

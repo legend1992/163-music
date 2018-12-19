@@ -1,7 +1,11 @@
 import '../../css/admin/admin.scss';
 import '../../css/public/icon.scss';
 import '../public/event-hub';
-import './song-upload';
-import './song-create';
-import './song-list';
-import './song-form';
+import './nav-tab';
+import './song/song-upload';
+import './song/song-create';
+import './song/song-list';
+import './song/song-form';
+import './songs-list/songs-create';
+import './songs-list/songs-list';
+import './songs-list/songs-form';

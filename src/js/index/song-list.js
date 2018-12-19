@@ -1,4 +1,4 @@
-import $ from '../../../node_modules/jquery/dist/jquery';
+import $ from 'jquery';
 const APP_ID = 'o3NC55gABAwll79UCrKnaCyx-gzGzoHsz';
 const APP_KEY = 'k2y1XBiRCMC0JHQJ1TtSo2By';
 const AV = require('leancloud-storage');

@@ -1,24 +1,18 @@
 /**
  * this.model.data.selectedIdx可优化，直接改变被选中的li的class即可，每次重新渲染开销比较大
  */
-import $ from '../../../node_modules/jquery/dist/jquery';
-const APP_ID = 'o3NC55gABAwll79UCrKnaCyx-gzGzoHsz';
-const APP_KEY = 'k2y1XBiRCMC0JHQJ1TtSo2By';
+import $ from 'jquery';
 const AV = require('leancloud-storage');
-AV.init({
-  appId: APP_ID,
-  appKey: APP_KEY
-});
 {
   let view = {
-    el: $('#song-list'),
+    el: $('#songs-list'),
     template: ``,
     render(selectedIdx, list) {
       let html = this.template;
       if(list.length) {
         html += '<ul>';
         list.map((item, key)=> {
-          html += `<li class="${key===selectedIdx ? 'active' : ''}" data-song-id=${item.id} title="${item.name}">${item.name}
+          html += `<li class="${key===selectedIdx ? 'active' : ''}" data-songs-id=${item.id} title="${item.name}">${item.name}
             <svg class="ali-icon" aria-hidden="true" title="删除">
               <use xlink:href="#icon-delete"></use>
             </svg>
@@ -26,7 +20,7 @@ AV.init({
         })
         html += '</ul>';
       }else {
-        html = '<ul><li>暂无歌曲</li></ul>'
+        html = '<div class="no-data">暂无歌单</div>'
       }
       this.el.html(html)
     }
@@ -34,21 +28,21 @@ AV.init({
   let model = {
     data: {
       selectedIdx: -1,
-      songList: []
+      songsList: []
     },
     findAll() {
-      let Songs = new AV.Query('Songs');
-      return Songs.find().then((songs)=> {
-        this.data.songList = songs.map((song)=> {
-          return { id: song.id, ...song.attributes }
+      let SongsList = new AV.Query('SongsList');
+      return SongsList.find().then((songsList)=> {
+        this.data.songsList = songsList.map((songs)=> {
+          return { id: songs.id, ...songs.attributes }
         })
       }, function (error) {
         console.error('歌曲列表获取失败:', error)
       });
     },
     deleteSong(id) {
-      let song = AV.Object.createWithoutData('Songs', id);
-      return song.destroy().then(function (success) {
+      let songs = AV.Object.createWithoutData('SongsList', id);
+      return songs.destroy().then(function (success) {
         return success
       }, function (error) {
         return error
@@ -67,8 +61,8 @@ AV.init({
       this.loading();
       setTimeout(() => {
         this.model.findAll().then(()=> {
-          let { selectedIdx, songList } = this.model.data;
-          this.view.render(selectedIdx, songList);
+          let { selectedIdx, songsList } = this.model.data;
+          this.view.render(selectedIdx, songsList);
         })
       }, 500);
     },
@@ -79,21 +73,21 @@ AV.init({
     },
     bindEvents() {
       this.view.el.on('click', 'li', (e)=> {
-        if(e.target.nodeName==='LI') {
+        if(e.target.nodeName==='use') {
+          let songsId = $(e.currentTarget).attr('data-songs-id');
+          this.deleteSong(songsId)
+        }else {
           let index = $(e.target).index();
           this.model.data.selectedIdx = index;
-          let { selectedIdx, songList } = this.model.data;
-          this.view.render(selectedIdx, songList);
-          window.eventHub.emit('edit-song', JSON.parse(JSON.stringify(this.model.data.songList[index])))
-        }else {
-          let songId = $(e.currentTarget).attr('data-song-id');
-          this.deleteSong(songId)
+          let { selectedIdx, songsList } = this.model.data;
+          this.view.render(selectedIdx, songsList);
+          window.eventHub.emit('edit-songs', JSON.parse(JSON.stringify(this.model.data.songsList[index])))
         }
       })
     },
-    deleteSong(songId) {
+    deleteSong(songsId) {
       this.loading();
-      this.model.deleteSong(songId).then((success)=> {
+      this.model.deleteSong(songsId).then((success)=> {
         console.log('删除成功');
         this.findAll()
       }, (error)=> {
@@ -101,20 +95,20 @@ AV.init({
       })
     },
     eventHubOn() {
-      window.eventHub.on('add-success', (data)=> {
+      window.eventHub.on('add-songs-success', (data)=> {
         this.findAll()
       })
-      window.eventHub.on('modify-success', (data)=> {
+      window.eventHub.on('modify-songs-success', (data)=> {
         this.findAll()
       })
-      window.eventHub.on('create-song', ()=> {
+      window.eventHub.on('create-songs', ()=> {
         this.reset()
       })
     },
     reset() {
       this.model.data.selectedIdx = -1;
-      let { selectedIdx, songList } = this.model.data;
-      this.view.render(selectedIdx, songList);
+      let { selectedIdx, songsList } = this.model.data;
+      this.view.render(selectedIdx, songsList);
     }
   }
   controller.init(view, model)

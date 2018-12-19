@@ -1,5 +1,6 @@
-import $ from '../../../node_modules/jquery/dist/jquery';
+import $ from 'jquery';
 import * as qiniu from 'qiniu-js';
+import { getToken } from '../service';
 
 {
   let view = {
@@ -28,6 +29,12 @@ import * as qiniu from 'qiniu-js';
         width: `${percent}%`,
         opacity: `${percent/100}`
       })
+    },
+    show() {
+      this.el.show()
+    },
+    hide() {
+      this.el.hide()
     }
   };
   let model = {
@@ -38,6 +45,7 @@ import * as qiniu from 'qiniu-js';
       this.view = view;
       this.model = model;
       this.getToken();
+      this.eventHubOn();
     },
     uploadSuccess(res) {
       window.eventHub.emit('upload-success', res);
@@ -48,27 +56,10 @@ import * as qiniu from 'qiniu-js';
       }, true)
     },
     getToken() {
-      $.ajax({
-        url: "http://localhost:8888/api/uptoken",
-        success: (res) => {
-          let { token } = JSON.parse(res);
-          let config = {
-            useCdnDomain: false,
-            disableStatisticsReport: false,
-            retryCount: 6,
-            region: undefined
-          };
-          let putExtra = {
-            fname: "",
-            params: {},
-            mimeType: null
-          };
-          this.uploadWithSDK(token, putExtra, config);
-        }
-      })
+      getToken(this.bindFileChange, this)
     },
-    uploadWithSDK(token, putExtra, config) {
-      $("#select-file").on("change", (e)=> {
+    bindFileChange(token, putExtra, config) {
+      this.view.el.on("change", "#select-file", (e)=> {
         let file = e.target.files[0];
         if (file) {
           let observable = qiniu.upload(file, file.name, token, putExtra, config);
@@ -88,6 +79,15 @@ import * as qiniu from 'qiniu-js';
             showInput: false,
             percent: 0
           })
+        }
+      })
+    },
+    eventHubOn() {
+      window.eventHub.on('select-menu', (menu)=> {
+        if(menu==='song-manage') {
+          this.view.show()
+        }else {
+          this.view.hide()
         }
       })
     }

@@ -1,11 +1,11 @@
-import $ from '../../../node_modules/jquery/dist/jquery';
-import { patchValue } from '../public/public-method';
+import $ from 'jquery';
+import { patchValue } from '../../public/public-method';
 const AV = require('leancloud-storage');
 const SaveSongsObj = AV.Object.extend('Songs');
 
 {
   let view = {
-    el: $('#section'),
+    el: $('#song-form-section'),
     template: `
       <h1>__title__</h1>
       <form>
@@ -25,9 +25,9 @@ const SaveSongsObj = AV.Object.extend('Songs');
             <span>专辑</span><input type="text" placeholder="请输入专辑名" name="album" value="__album__">
           </label>
         </div>
-        <div class="row require">
+        <div class="row require big-row">
           <label>
-            <span>歌曲外链</span><input type="text" placeholder="请输入歌曲外链" name="url" value="__url__">
+            <span>歌曲外链</span><input type="text" placeholder="网络资源可直接填写地址，本地资源请在下方上传" name="url" value="__url__">
           </label>
           <div class="explain">请输入歌曲外链</div>
         </div>
@@ -60,10 +60,10 @@ const SaveSongsObj = AV.Object.extend('Songs');
       }
     },
     unLoading() {
-      $('#save').removeClass('loading');
+      this.el.find('#save').removeClass('loading');
     },
     loading() {
-      $('#save').addClass('loading');
+      this.el.find('#save').addClass('loading');
     }
   };
   let model = {
@@ -136,14 +136,14 @@ const SaveSongsObj = AV.Object.extend('Songs');
             this.model.modify().then((data)=> {
               setTimeout(() => {
                 this.loading = false;
-                window.eventHub.emit('modify-success', data);
+                window.eventHub.emit('modify-song-success', data);
                 this.view.unLoading()
               }, 500);
             })
           }else {
             this.model.save().then((data)=> {
               setTimeout(() => {
-                window.eventHub.emit('add-success', data);
+                window.eventHub.emit('add-song-success', data);
                 this.reset()
               }, 500);
             })
