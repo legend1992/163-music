@@ -40,6 +40,10 @@ const SaveSongsObj = AV.Object.extend('Songs');
           <span id="save" class="button"><div class="loader-wrapper2"><div class="loader">Loading...</div></div>提交</span>
         </div>
       </form>
+      <h1>加入歌单</h1>
+      <form>
+        <label><input type="checkbox"></label>
+      </form>
     `,
     render(data) {
       let { songId, songInfo } = data;

@@ -41,11 +41,12 @@ const SaveSongsListObj = AV.Object.extend('SongsList');
           <span id="save" class="button"><div class="loader-wrapper2"><div class="loader">Loading...</div></div>提交</span>
         </div>
       </form>
+      <ul id="song-list"></ul>
     `,
     render(data) {
       let { songsId, songsInfo } = data;
       let html = this.template;
-      let title = songsId ? '编辑歌单' : '新建歌单';
+      let title = songsId ? '编辑歌单<button id="edit-list" class="right">编辑列表</button>' : '新建歌单';
       html = html.replace('__title__', title);
       for(let key in songsInfo) {
         html = html.replace(`__${key}__`, songsInfo[key].value)
@@ -126,6 +127,16 @@ const SaveSongsListObj = AV.Object.extend('SongsList');
         console.error('Failed to SaveSongsListObj: ' + error.message);
       })
     },
+    // findAll() {
+    //   let SongsList = new AV.Query('SongsList');
+    //   return SongsList.find().then((songsList)=> {
+    //     this.data.songsList = songsList.map((songs)=> {
+    //       return { id: songs.id, ...songs.attributes }
+    //     })
+    //   }, function (error) {
+    //     console.error('歌单列表获取失败:', error)
+    //   })
+    // },
     reset() {
       this.data = {
         songsId: undefined,

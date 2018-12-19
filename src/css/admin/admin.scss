@@ -20,8 +20,10 @@ body {
     flex-grow: 1;
     box-shadow: 0 5px 5px #ddd;
     ul.first-level {
+      min-height: 100%;
       >li {
         display: none;
+        height: 100%;
         &.active {
           display: block;
         }
@@ -138,111 +140,121 @@ body {
     }
     section#section-wrapper {
       flex-grow: 1;
-      padding: 0 50px;
       min-width: 450px;
-      h1 {
-        margin: 15px 0;
-        letter-spacing: 5px;
-        padding-bottom: 5px;
-        border-bottom: 1px solid #ddd;
-      }
-      form {
-        .row {
-          margin-bottom: 10px;
-          &.big-row {
-            position: relative;
-            input {
-              width: 400px;
-            }
-            .upload-input-wrapper {
-              position: absolute;
-              top: 0;
-              left: 480px;
-              padding: 5px;
-              border: 1px solid #ddd;
-              border-radius: 5px;
-              background: #fff;
-              cursor: pointer;
-              .progress, input {
-                position: absolute;
-                left: 0;
-                width: 100%;
-                height: 100%;
-              }
-              .progress {
-                opacity: 0;
-                width: 0;
-                background: #00a854;
-                z-index: 1;
-                transition: all .3s linear;
-                height: 12%;
-                border-radius: 10px;
-                bottom: 0;
-                top: unset;
-              }
+      section {
+        padding: 0.1px 50px;
+        h1 {
+          margin: 15px 0;
+          letter-spacing: 5px;
+          padding-bottom: 5px;
+          border-bottom: 1px solid #ddd;
+          button {
+            border: 1px solid #e05858;
+            border-radius: 14px;
+            padding: 2px 1em;
+            background: #e05858;
+            color: #fff;
+            letter-spacing: 2px;
+          }
+        }
+        form {
+          .row {
+            margin-bottom: 10px;
+            &.big-row {
+              position: relative;
               input {
+                width: 400px;
+              }
+              .upload-input-wrapper {
+                position: absolute;
                 top: 0;
-                opacity: 0;
+                left: 480px;
+                padding: 5px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                background: #fff;
                 cursor: pointer;
+                .progress, input {
+                  position: absolute;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                }
+                .progress {
+                  opacity: 0;
+                  width: 0;
+                  background: #00a854;
+                  z-index: 1;
+                  transition: all .3s linear;
+                  height: 12%;
+                  border-radius: 10px;
+                  bottom: 0;
+                  top: unset;
+                }
+                input {
+                  top: 0;
+                  opacity: 0;
+                  cursor: pointer;
+                }
               }
             }
-          }
-          &.button-wrapper {
-            margin-left: 4em;
-          }
-          &.require {
-            label {
-              &::after {
-                content: '*';
+            &.button-wrapper {
+              margin-left: 4em;
+            }
+            &.require {
+              label {
+                &::after {
+                  content: '*';
+                  color: $root-color;
+                }
+              }
+              .explain {
+                display: none;
+                margin-left: 5em;
+                font-size: 14px;
                 color: $root-color;
               }
             }
-            .explain {
-              display: none;
-              margin-left: 5em;
-              font-size: 14px;
-              color: $root-color;
+            &.error {
+              input, textarea {
+                border-color: $root-color;
+              }
+              .explain {
+                display: block;
+              }
             }
-          }
-          &.error {
-            input, textarea {
-              border-color: $root-color;
+            label {
+              span {
+                display: inline-block;
+                width: 4em;
+                text-align: right;
+              }
             }
-            .explain {
-              display: block;
+            input, span.button, textarea {
+              border: 1px solid #ddd;
+              padding: 5px 10px;
+              border-radius: 5px;
+              margin-left: 5px;
+              transition: all .3s ease;
             }
-          }
-          label {
-            span {
-              display: inline-block;
-              width: 4em;
-              text-align: right;
+            input:focus, span.button:hover, textarea:focus {
+              box-shadow: 1px 1px 3px #ddd;
             }
-          }
-          input, span.button, textarea {
-            border: 1px solid #ddd;
-            padding: 5px 10px;
-            border-radius: 5px;
-            margin-left: 5px;
-            transition: all .3s ease;
-          }
-          input:focus, span.button:hover, textarea:focus {
-            box-shadow: 1px 1px 3px #ddd;
-          }
-          span.button {
-            display: inline-flex;
-            align-items: center;
-            padding: 5px 1em;
-            cursor: pointer;
-            &.loading {
-              background: rgba($color: #ddd, $alpha: 1);
-              color: #fff;
-              cursor: not-allowed;
-              .loader {
-                width: 16px;
-                height: 16px;
-                border: 2px solid $root-color;
-                border-left-color: rgba(255, 255, 255, .2);
+            span.button {
+              display: inline-flex;
+              align-items: center;
+              padding: 5px 1em;
+              cursor: pointer;
+              &.loading {
+                background: rgba($color: #ddd, $alpha: 1);
+                color: #fff;
+                cursor: not-allowed;
+                .loader {
+                  width: 16px;
+                  height: 16px;
+                  border: 2px solid $root-color;
+                  border-left-color: rgba(255, 255, 255, .2);
+                }
               }
             }
           }
