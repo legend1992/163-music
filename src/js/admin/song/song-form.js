@@ -129,13 +129,13 @@ const SaveSongsObj = AV.Object.extend('Songs');
         for (let key in this.model.data.songInfo) {
           this.model.data.songInfo[key].value = this.view.el.find(`input[name=${key}]`).val()
         }
-        if(this.verifyInfo(this.model.data.songInfo) && !this.loading) {
-          this.loading = true;
+        if(this.verifyInfo(this.model.data.songInfo) && !this.model.data.loading) {
+          this.model.data.loading = true;
           this.view.loading();
           if(this.model.data.songId) {
             this.model.modify().then((data)=> {
               setTimeout(() => {
-                this.loading = false;
+                this.model.data.loading = false;
                 window.eventHub.emit('modify-song-success', data);
                 this.view.unLoading()
               }, 500);
@@ -181,6 +181,9 @@ const SaveSongsObj = AV.Object.extend('Songs');
           url: `http://pjrjfrnv0.bkt.clouddn.com/${encodeURIComponent(res.key)}`
         });
         this.view.render(this.model.data)
+      })
+      window.eventHub.on('song-list-empty', ()=> {
+        this.reset()
       })
     },
     reset() {

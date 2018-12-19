@@ -3,8 +3,12 @@ import $ from 'jquery'
 {
   let view = {
     el: $('#header>nav'),
-    changeNav(navItem) {
-      navItem.addClass('active').siblings('li').removeClass('active')
+    changeNav(e, index) {
+      $(e.currentTarget).addClass('active').siblings('li').removeClass('active');
+      this.menuSelect(index)
+    },
+    menuSelect(index) {
+      $('#main #section-wrapper>li').eq(index).addClass('active').siblings('li').removeClass('active')
     }
   }
   let model = {
@@ -19,12 +23,11 @@ import $ from 'jquery'
       this.bindEvents();
     },
     bindEvents() {
-      this.view.el.on('click', 'li.nav-item span', (e)=> {
-        let navItem = $(e.target).closest('.nav-item');
-        let index = navItem.attr('data-index');
+      this.view.el.on('click', 'li.nav-item', (e)=> {
+        let index = $(e.currentTarget).attr('data-index');
         if(this.model.data.activeIndex !== index) {
           this.model.data.activeIndex = index;
-          this.view.changeNav(navItem);
+          this.view.changeNav(e, index);
         }
       })
     }

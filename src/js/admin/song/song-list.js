@@ -79,23 +79,28 @@ AV.init({
     },
     bindEvents() {
       this.view.el.on('click', 'li', (e)=> {
-        if(e.target.nodeName==='use') {
-          let songId = $(e.currentTarget).attr('data-song-id');
-          this.deleteSong(songId)
-        }else {
-          let index = $(e.target).index();
+        let index = $(e.currentTarget).index();
+        if(e.target.nodeName==='LI') {
           this.model.data.selectedIdx = index;
           let { selectedIdx, songList } = this.model.data;
           this.view.render(selectedIdx, songList);
           window.eventHub.emit('edit-song', JSON.parse(JSON.stringify(this.model.data.songList[index])))
+        }else {
+          let songId = $(e.currentTarget).attr('data-song-id');
+          this.deleteSong(songId, index)
         }
       })
     },
-    deleteSong(songId) {
+    deleteSong(songId, index) {
       this.loading();
-      this.model.deleteSong(songId).then((success)=> {
-        console.log('删除成功');
+      this.model.deleteSong(songId).then(()=> {
         this.findAll()
+        if(index <= this.model.data.selectedIdx) {
+          this.model.data.selectedIdx -= 1;
+          if(this.model.data.selectedIdx === -1) {
+            window.eventHub.emit('song-list-empty')
+          }
+        }
       }, (error)=> {
         console.log(error)
       })

@@ -157,13 +157,13 @@ const SaveSongsListObj = AV.Object.extend('SongsList');
         for (let key in this.model.data.songsInfo) {
           this.model.data.songsInfo[key].value = this.view.el.find(`[name=${key}]`).val()
         }
-        if(this.verifyInfo(this.model.data.songsInfo) && !this.loading) {
-          this.loading = true;
+        if(this.verifyInfo(this.model.data.songsInfo) && !this.model.data.loading) {
+          this.model.data.loading = true;
           this.view.loading();
           if(this.model.data.songsId) {
             this.model.modify().then((data)=> {
               setTimeout(() => {
-                this.loading = false;
+                this.model.data.loading = false;
                 window.eventHub.emit('modify-songs-success', data);
                 this.view.unLoading()
               }, 500);

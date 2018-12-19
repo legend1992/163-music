@@ -193,25 +193,27 @@ main {
             background-position: -.48rem 0;
           }
         }
-        .loader-wrapper1 {
-          position: relative;
-          min-height: 1rem;
-          .loader {
-            &, &:before, &:after {
-              width: .1rem;
-              height: .24rem;
-              animation: index-load1 1s infinite ease-in-out;
-            }
-            & {
-              animation-delay: -0.16s;
-            }
-            &:before {
-              left: -.36rem;
-              animation-delay: -0.32s;
-            }
-            &:after {
-              left: .36rem;
-            }
+      }
+    }
+    &.list-wrapper {
+      .loader-wrapper1 {
+        position: relative;
+        min-height: 1rem;
+        .loader {
+          &, &:before, &:after {
+            width: .1rem;
+            height: .24rem;
+            animation: index-load1 1s infinite ease-in-out;
+          }
+          & {
+            animation-delay: -0.16s;
+          }
+          &:before {
+            left: -.36rem;
+            animation-delay: -0.32s;
+          }
+          &:after {
+            left: .36rem;
           }
         }
       }

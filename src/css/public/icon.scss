@@ -1,3 +1,4 @@
+$root-color: #e05858;
 .loader-wrapper1 {
   position: absolute;
   top: 0;
@@ -11,10 +12,10 @@
     top: 50%;
     left: 50%;
     transform: translate3d(-50%,-50%,0);
-    color: red;
+    color: $root-color;
     text-indent: -9999px;
     &, &:before, &:after {
-      background: red;
+      background: $root-color;
       animation: load1 1s infinite ease-in-out;
       width: 8px;
     }

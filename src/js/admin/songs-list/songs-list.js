@@ -37,7 +37,7 @@ const AV = require('leancloud-storage');
           return { id: songs.id, ...songs.attributes }
         })
       }, function (error) {
-        console.error('歌曲列表获取失败:', error)
+        console.error('歌单列表获取失败:', error)
       });
     },
     deleteSong(id) {

@@ -23,6 +23,9 @@ import $ from 'jquery';
       window.eventHub.on('edit-song', ()=> {
         this.view.el.removeClass('active')
       })
+      window.eventHub.on('song-list-empty', ()=> {
+        this.view.el.addClass('active');
+      })
     }
   }
   controller.init(view, model)
