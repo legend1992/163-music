@@ -226,6 +226,9 @@ const SaveSongsListObj = AV.Object.extend('SongsList');
       window.eventHub.on('create-songs', ()=> {
         this.reset()
       })
+      window.eventHub.on('songs-list-empty', ()=> {
+        this.reset()
+      })
     },
     reset() {
       this.model.reset();

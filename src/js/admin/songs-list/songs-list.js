@@ -73,23 +73,29 @@ const AV = require('leancloud-storage');
     },
     bindEvents() {
       this.view.el.on('click', 'li', (e)=> {
-        if(e.target.nodeName==='use') {
-          let songsId = $(e.currentTarget).attr('data-songs-id');
-          this.deleteSong(songsId)
-        }else {
-          let index = $(e.target).index();
+        let index = $(e.currentTarget).index();
+        if(e.target.nodeName==='LI') {
           this.model.data.selectedIdx = index;
           let { selectedIdx, songsList } = this.model.data;
           this.view.render(selectedIdx, songsList);
           window.eventHub.emit('edit-songs', JSON.parse(JSON.stringify(this.model.data.songsList[index])))
+        }else {
+          let songsId = $(e.currentTarget).attr('data-songs-id');
+          this.deleteSong(songsId, index)
         }
       })
     },
-    deleteSong(songsId) {
+    deleteSong(songsId, index) {
       this.loading();
-      this.model.deleteSong(songsId).then((success)=> {
+      this.model.deleteSong(songsId).then(()=> {
         console.log('删除成功');
         this.findAll()
+        if(index <= this.model.data.selectedIdx) {
+          this.model.data.selectedIdx -= 1;
+          if(this.model.data.selectedIdx === -1) {
+            window.eventHub.emit('songs-list-empty')
+          }
+        }
       }, (error)=> {
         console.log(error)
       })
