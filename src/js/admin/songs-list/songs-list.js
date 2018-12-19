@@ -63,6 +63,11 @@ const AV = require('leancloud-storage');
         this.model.findAll().then(()=> {
           let { selectedIdx, songsList } = this.model.data;
           this.view.render(selectedIdx, songsList);
+          if(this.model.data.selectedIdx === -1) {
+            window.eventHub.emit('songs-list-empty')
+          }else {
+            window.eventHub.emit('edit-songs', JSON.parse(JSON.stringify(this.model.data.songsList[this.model.data.selectedIdx])))
+          }
         })
       }, 500);
     },
@@ -92,8 +97,8 @@ const AV = require('leancloud-storage');
         this.findAll()
         if(index <= this.model.data.selectedIdx) {
           this.model.data.selectedIdx -= 1;
-          if(this.model.data.selectedIdx === -1) {
-            window.eventHub.emit('songs-list-empty')
+          if(this.model.data.selectedIdx === -1 && this.model.data.songList.length > 1) {
+            this.model.data.selectedIdx = 0;
           }
         }
       }, (error)=> {

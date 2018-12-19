@@ -69,6 +69,11 @@ AV.init({
         this.model.findAll().then(()=> {
           let { selectedIdx, songList } = this.model.data;
           this.view.render(selectedIdx, songList);
+          if(this.model.data.selectedIdx === -1) {
+            window.eventHub.emit('song-list-empty')
+          }else {
+            window.eventHub.emit('edit-song', JSON.parse(JSON.stringify(this.model.data.songList[this.model.data.selectedIdx])))
+          }
         })
       }, 500);
     },
@@ -94,13 +99,13 @@ AV.init({
     deleteSong(songId, index) {
       this.loading();
       this.model.deleteSong(songId).then(()=> {
-        this.findAll()
         if(index <= this.model.data.selectedIdx) {
           this.model.data.selectedIdx -= 1;
-          if(this.model.data.selectedIdx === -1) {
-            window.eventHub.emit('song-list-empty')
+          if(this.model.data.selectedIdx === -1 && this.model.data.songList.length > 1) {
+            this.model.data.selectedIdx = 0;
           }
         }
+        this.findAll()
       }, (error)=> {
         console.log(error)
       })
