@@ -15,6 +15,7 @@ AV.init({
       if(list.length) {
         html += '<ul>';
         list.map((item)=> {
+          item.remark = item.remark ? '('+item.remark+')' : item.remark;
           html += `<li data-song-id=${item.id} title="${item.name}">
             <h4>${item.name}<span class="remark">${item.remark||''}</span></h4>
             <p><i class="icon-SQ icon"></i><span>${item.singer||'歌手(未知)'}</span> - <span>${item.album||'专辑(未知)'}</span></p>
