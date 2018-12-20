@@ -6,6 +6,7 @@ import './song/song-upload';
 import './song/song-create';
 import './song/song-list';
 import './song/song-form';
+import './song/song-like';
 import './songs-list/songs-create';
 import './songs-list/songs-list';
 import './songs-list/songs-form';

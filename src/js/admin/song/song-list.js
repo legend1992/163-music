@@ -2,6 +2,7 @@
  * this.model.data.selectedIdx可优化，直接改变被选中的li的class即可，每次重新渲染开销比较大
  */
 import $ from 'jquery';
+import { deleteData } from '../../public/service';
 const APP_ID = 'o3NC55gABAwll79UCrKnaCyx-gzGzoHsz';
 const APP_KEY = 'k2y1XBiRCMC0JHQJ1TtSo2By';
 const AV = require('leancloud-storage');
@@ -47,11 +48,13 @@ AV.init({
       });
     },
     deleteSong(id) {
-      let song = AV.Object.createWithoutData('Songs', id);
-      return song.destroy().then(function (success) {
-        return success
-      }, function (error) {
-        return error
+      return new Promise((resolve)=> {
+        deleteData({
+          obj: 'Songs',
+          id: id
+        }, ()=> {
+          resolve()
+        })
       })
     }
   }

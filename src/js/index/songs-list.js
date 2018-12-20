@@ -1,5 +1,5 @@
 import $ from 'jquery';
-const AV = require('leancloud-storage');
+import { findAllSongs } from '../public/service';
 {
   let view = {
     el: $('#songs-list'),
@@ -26,13 +26,10 @@ const AV = require('leancloud-storage');
       songsList: []
     },
     findAll() {
-      let SongsList = new AV.Query('SongsList');
-      return SongsList.find().then((songsList)=> {
-        this.data.songsList = songsList.map((songs)=> {
-          return { id: songs.id, ...songs.attributes }
+      return new Promise((resolve)=> {
+        findAllSongs((data)=> {
+          resolve(data)
         })
-      }, function (error) {
-        console.error('歌单列表获取失败:', error)
       })
     }
   }
@@ -45,8 +42,8 @@ const AV = require('leancloud-storage');
     findAll() {
       this.loading();
       setTimeout(() => {
-        this.model.findAll().then(()=> {
-          let { songsList } = this.model.data;
+        this.model.findAll().then((songsList)=> {
+          this.model.data.songsList = songsList;
           this.view.render(songsList);
         })
       }, 500);

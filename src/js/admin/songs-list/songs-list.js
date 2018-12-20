@@ -2,7 +2,8 @@
  * this.model.data.selectedIdx可优化，直接改变被选中的li的class即可，每次重新渲染开销比较大
  */
 import $ from 'jquery';
-const AV = require('leancloud-storage');
+import { findAllSongs, deleteData } from '../../public/service';
+
 {
   let view = {
     el: $('#songs-list'),
@@ -31,21 +32,20 @@ const AV = require('leancloud-storage');
       songsList: []
     },
     findAll() {
-      let SongsList = new AV.Query('SongsList');
-      return SongsList.find().then((songsList)=> {
-        this.data.songsList = songsList.map((songs)=> {
-          return { id: songs.id, ...songs.attributes }
+      return new Promise((resolve)=> {
+        findAllSongs((data)=> {
+          resolve(data)
         })
-      }, function (error) {
-        console.error('歌单列表获取失败:', error)
-      });
+      })
     },
     deleteSong(id) {
-      let songs = AV.Object.createWithoutData('SongsList', id);
-      return songs.destroy().then(function (success) {
-        return success
-      }, function (error) {
-        return error
+      return new Promise((resolve)=> {
+        deleteData({
+          obj: 'SongsList',
+          id: id
+        }, ()=> {
+          resolve()
+        })
       })
     }
   }
@@ -60,8 +60,9 @@ const AV = require('leancloud-storage');
     findAll() {
       this.loading();
       setTimeout(() => {
-        this.model.findAll().then(()=> {
-          let { selectedIdx, songsList } = this.model.data;
+        this.model.findAll().then((songsList)=> {
+          this.model.data.songsList = songsList;
+          let { selectedIdx } = this.model.data;
           this.view.render(selectedIdx, songsList);
           if(this.model.data.selectedIdx === -1) {
             window.eventHub.emit('songs-list-empty')

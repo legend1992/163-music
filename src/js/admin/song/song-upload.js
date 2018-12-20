@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import * as qiniu from 'qiniu-js';
-import { getToken } from '../service';
+import { getToken } from '../../public/service';
 
 {
   let view = {

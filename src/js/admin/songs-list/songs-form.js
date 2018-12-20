@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { patchValue } from '../../public/public-method';
-import { getToken } from '../service';
+import { getToken } from '../../public/service';
 import * as qiniu from 'qiniu-js';
 const AV = require('leancloud-storage');
 const SaveSongsListObj = AV.Object.extend('SongsList');
