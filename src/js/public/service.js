@@ -22,8 +22,8 @@ function getToken(fn, _this) {
 }
 function findAllSongs(fn) {
   let SongsList = new AV.Query('SongsList');
-  SongsList.find().then((songsList)=> {
-    songsList = songsList.map((songs)=> {
+  SongsList.find().then((songsList) => {
+    songsList = songsList.map((songs) => {
       return { id: songs.id, ...songs.attributes }
     })
     fn(songsList)
@@ -40,4 +40,25 @@ function deleteData(param, fn) {
     console.error('删除失败:', error)
   })
 }
-export { getToken, findAllSongs, deleteData }
+function querySongSelectedSongs(songId, fn) {
+  let song = AV.Object.createWithoutData('Songs', songId);
+  let query = new AV.Query('songSongsObj');
+  query.equalTo('song', song);
+  query.find().then(function (selectedSongs) {
+    selectedSongs = selectedSongs.map((selected) => {
+      return { id: selected.id, songsId: selected.attributes.songs.id }
+    })
+    fn(selectedSongs)
+  })
+}
+function deleteSongSelectedSongsAll(selectSongs, fn) {
+  let objects = selectSongs.map((songs)=> {
+    return AV.Object.createWithoutData('songSongsObj', songs.id)
+  })
+  AV.Object.destroyAll(objects).then(function () {
+    fn()
+  }, function (error) {
+    console.log('批量删除歌曲选中歌单失败', error)
+  })
+}
+export { getToken, findAllSongs, deleteData, querySongSelectedSongs, deleteSongSelectedSongsAll }

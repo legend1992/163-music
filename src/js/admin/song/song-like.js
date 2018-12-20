@@ -1,6 +1,6 @@
 import $ from 'jquery';
 const AV = require('leancloud-storage');
-import { findAllSongs } from '../../public/service';
+import { findAllSongs, querySongSelectedSongs, deleteSongSelectedSongsAll } from '../../public/service';
 
 {
   let view = {
@@ -14,23 +14,44 @@ import { findAllSongs } from '../../public/service';
       songsList.map((songs)=> {
         html += `<div class="row"><label><input type="checkbox" name="songs" value="${songs.id}">${songs.name}</label></div>`
       })
-      html += `<div class="row button-wrapper">
+      html += `<div class="row require button-wrapper">
+          <div class="explain" style="margin-left:5px;">请选择歌单</div>
           <span id="songs-save" class="button"><div class="loader-wrapper2"><div class="loader">Loading...</div></div>确定</span>
         </div></form>
       `;
-      this.el.append(html)
+      this.el.html(html)
     },
     unLoading() {
       this.el.find('#songs-save').removeClass('loading');
     },
     loading() {
       this.el.find('#songs-save').addClass('loading');
+    },
+    highlightInput() {
+      this.el.find('.row.require').addClass('error')
+    },
+    downplayInput() {
+      this.el.find('.row.require').removeClass('error')
+    },
+    checkInputStatus(selectSongs) {
+      this.el.find('input:checkbox[name="songs"]').each((key, input)=> {
+        input.checked = false;
+        for(let i=0; i<selectSongs.length; i++) {
+          if(input.value === selectSongs[i].songsId) {
+            input.checked = true;
+            break;
+          }
+        }
+      })
     }
   };
   let model = {
     data: {
       selectSong: null,
-      songsList: []
+      songsList: [],
+      selectSongs: [],
+      selectSongsEl: [],
+      successIndex: 0
     },
     findAll() {
       return new Promise((resolve)=> {
@@ -38,6 +59,30 @@ import { findAllSongs } from '../../public/service';
           resolve(data)
         })
       })
+    },
+    querySongSelectedSongs(songId) {
+      return new Promise((resolve)=> {
+        querySongSelectedSongs(songId, (data)=> {
+          resolve(data)
+        })
+      })
+    },
+    deleteSongSelectedSongsAll() {
+      return new Promise((resolve)=> {
+        deleteSongSelectedSongsAll(this.data.selectSongs, ()=> {
+          resolve()
+        })
+      })
+    },
+    reset() {
+      let { songsList } = this.data;
+      this.data = {
+        songsList: songsList,
+        selectSong: null,
+        selectSongs: [],
+        selectSongsEl: [],
+        successIndex: 0
+      }
     }
   }
   let controller = {
@@ -51,36 +96,74 @@ import { findAllSongs } from '../../public/service';
     findAll() {
       this.model.findAll().then((songsList)=> {
         this.model.data.songsList = songsList;
-        console.log(songsList)
         this.view.render(songsList)
       })
     },
     bindEvents() {
+      this.view.el.on('click', 'input:checkbox[name="songs"]', ()=> {
+        this.model.data.selectSongsEl = this.view.el.find('input:checkbox[name="songs"]:checked');
+        if(this.model.data.selectSongsEl.length || this.model.data.selectSongs.length) {
+          this.view.downplayInput()
+        }else {
+          this.view.highlightInput()
+        }
+      })
       this.view.el.on('click', '#songs-save', ()=> {
-        let selectSongsEl = this.view.el.find('input:checkbox[name="songs"]:checked');
-        if(selectSongsEl.length) {
+        this.model.data.successIndex = 0;
+        let { selectSongsEl, selectSongs } = this.model.data;
+        if(selectSongsEl.length || selectSongs.length) {
           this.model.data.loading = true;
           this.view.loading();
-          selectSongsEl.each((key, songs)=> {
-            this.saveSongs(songs.value)
+          this.model.deleteSongSelectedSongsAll(selectSongs).then(()=> {
+            if(selectSongsEl.length) {
+              selectSongsEl.each((key, songs)=> {
+                this.saveSongs(songs.value)
+              })
+            }else {
+              setTimeout(() => {
+                this.view.unLoading();
+                this.model.data.loading = false;
+              }, 1000)
+            }
           })
         }else {
-          console.log('请先选择歌单')
+          this.view.highlightInput()
         }
       })
     },
     saveSongs(songsId) {
       let { selectSong } = this.model.data;
       let targetSongsList = AV.Object.createWithoutData('SongsList', songsId);
-      console.log(selectSong)
-      selectSong.set('dependent', targetSongsList);
-      selectSong.save().then((data)=> {
-        console.log(data)
+      let songSongsObj = new AV.Object('songSongsObj');
+      songSongsObj.set('song', selectSong);
+      songSongsObj.set('songs', targetSongsList);
+      songSongsObj.save().then(()=> {
+        this.model.data.successIndex ++;
+        if(this.model.data.successIndex===this.model.data.selectSongsEl.length) {
+          setTimeout(() => {
+            this.view.unLoading();
+            this.model.data.loading = false;
+          }, 1000)
+        }
       })
     },
+    reset() {
+      this.model.reset();
+      this.view.el.show();
+      this.view.render(this.model.data.songsList);
+    },
     eventHubOn() {
+      window.eventHub.on('create-song', ()=> {
+        this.view.el.hide()
+      })
       window.eventHub.on('edit-song', (song)=> {
+        this.reset();
         this.model.data.selectSong = AV.Object.createWithoutData('Songs', song.id)
+        this.model.querySongSelectedSongs(song.id).then((data)=> {
+          this.model.data.selectSongs = data;
+          this.view.checkInputStatus(data);
+          this.model.data.selectSongsEl = this.view.el.find('input:checkbox[name="songs"]:checked');
+        })
       })
     }
   }

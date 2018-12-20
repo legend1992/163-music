@@ -70,7 +70,7 @@ const SaveSongsObj = AV.Object.extend('Songs');
     loading() {
       this.el.find('#save').addClass('loading');
     }
-  };
+  }
   let model = {
     data: {
       songId: undefined,
