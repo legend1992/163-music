@@ -100,6 +100,10 @@ import { findAllSongs, querySongSelectedSongs, deleteSongSelectedSongsAll } from
       })
     },
     bindEvents() {
+      this.checkboxClick();
+      this.saveClick();
+    },
+    checkboxClick() {
       this.view.el.on('click', 'input:checkbox[name="songs"]', ()=> {
         this.model.data.selectSongsEl = this.view.el.find('input:checkbox[name="songs"]:checked');
         if(this.model.data.selectSongsEl.length || this.model.data.selectSongs.length) {
@@ -108,22 +112,20 @@ import { findAllSongs, querySongSelectedSongs, deleteSongSelectedSongsAll } from
           this.view.highlightInput()
         }
       })
+    },
+    saveClick() {
       this.view.el.on('click', '#songs-save', ()=> {
         this.model.data.successIndex = 0;
         let { selectSongsEl, selectSongs } = this.model.data;
         if(selectSongsEl.length || selectSongs.length) {
-          this.model.data.loading = true;
-          this.view.loading();
+          this.loading();
           this.model.deleteSongSelectedSongsAll(selectSongs).then(()=> {
             if(selectSongsEl.length) {
               selectSongsEl.each((key, songs)=> {
                 this.saveSongs(songs.value)
               })
             }else {
-              setTimeout(() => {
-                this.view.unLoading();
-                this.model.data.loading = false;
-              }, 1000)
+              this.unLoading()
             }
           })
         }else {
@@ -140,12 +142,19 @@ import { findAllSongs, querySongSelectedSongs, deleteSongSelectedSongsAll } from
       songSongsObj.save().then(()=> {
         this.model.data.successIndex ++;
         if(this.model.data.successIndex===this.model.data.selectSongsEl.length) {
-          setTimeout(() => {
-            this.view.unLoading();
-            this.model.data.loading = false;
-          }, 1000)
+          this.unLoading()
         }
       })
+    },
+    loading() {
+      this.model.data.loading = true;
+      this.view.loading();
+    },
+    unLoading() {
+      setTimeout(() => {
+        this.view.unLoading();
+        this.model.data.loading = false;
+      }, 1000)
     },
     reset() {
       this.model.reset();

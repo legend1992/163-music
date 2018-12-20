@@ -41,7 +41,6 @@ const SaveSongsListObj = AV.Object.extend('SongsList');
           <span id="save" class="button"><div class="loader-wrapper2"><div class="loader">Loading...</div></div>提交</span>
         </div>
       </form>
-      <ul id="song-list"></ul>
     `,
     render(data) {
       let { songsId, songsInfo } = data;
@@ -127,16 +126,6 @@ const SaveSongsListObj = AV.Object.extend('SongsList');
         console.error('Failed to SaveSongsListObj: ' + error.message);
       })
     },
-    // findAll() {
-    //   let SongsList = new AV.Query('SongsList');
-    //   return SongsList.find().then((songsList)=> {
-    //     this.data.songsList = songsList.map((songs)=> {
-    //       return { id: songs.id, ...songs.attributes }
-    //     })
-    //   }, function (error) {
-    //     console.error('歌单列表获取失败:', error)
-    //   })
-    // },
     reset() {
       this.data = {
         songsId: undefined,
@@ -162,6 +151,7 @@ const SaveSongsListObj = AV.Object.extend('SongsList');
     bindEvents() {
       this.saveSong();
       this.inputKeyUp();
+      this.editListClick();
     },
     saveSong() {
       this.view.el.on('click', '#save',(e)=> {
@@ -203,6 +193,11 @@ const SaveSongsListObj = AV.Object.extend('SongsList');
     inputKeyUp() {
       this.view.el.on('keyup', '.row.require input[type="text"]', (e)=> {
         this.view.downplayInput(e)
+      })
+    },
+    editListClick() {
+      this.view.el.on('click', '#edit-list', ()=> {
+        window.eventHub.emit('edit-songs-child', this.model.data.songsId)
       })
     },
     getToken() {

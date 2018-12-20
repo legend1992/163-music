@@ -51,6 +51,18 @@ function querySongSelectedSongs(songId, fn) {
     fn(selectedSongs)
   })
 }
+function querySongsChildSong(songsId, fn) {
+  let songs = AV.Object.createWithoutData('SongsList', songsId);
+  let query = new AV.Query('songSongsObj');
+  query.equalTo('songs', songs);
+  query.find().then(function (childSong) {
+    console.log(childSong)
+    childSong = childSong.map((selected) => {
+      return { id: selected.id, songId: selected.attributes.song.id }
+    })
+    fn(childSong)
+  })
+}
 function deleteSongSelectedSongsAll(selectSongs, fn) {
   let objects = selectSongs.map((songs)=> {
     return AV.Object.createWithoutData('songSongsObj', songs.id)
@@ -61,4 +73,4 @@ function deleteSongSelectedSongsAll(selectSongs, fn) {
     console.log('批量删除歌曲选中歌单失败', error)
   })
 }
-export { getToken, findAllSongs, deleteData, querySongSelectedSongs, deleteSongSelectedSongsAll }
+export { getToken, findAllSongs, deleteData, querySongSelectedSongs, querySongsChildSong, deleteSongSelectedSongsAll }

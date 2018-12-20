@@ -10,3 +10,4 @@ import './song/song-like';
 import './songs-list/songs-create';
 import './songs-list/songs-list';
 import './songs-list/songs-form';
+import './songs-list/songs-child';
