@@ -80,4 +80,14 @@ function deleteSongSelectedSongsAll(selectSongs, fn) {
     console.log('批量删除歌曲选中歌单失败', error)
   })
 }
-export { getToken, findAllSongs, deleteData, querySongSelectedSongs, querySongsChildSong, deleteSongSelectedSongsAll }
+function deleteSongsLikeSongAll(selectSong, fn) {
+  let objects = selectSong.map((song)=> {
+    return AV.Object.createWithoutData('songSongsObj', song.id)
+  })
+  AV.Object.destroyAll(objects).then(function () {
+    fn()
+  }, function (error) {
+    console.log('批量删除歌单中歌曲失败', error)
+  })
+}
+export { getToken, findAllSongs, deleteData, querySongSelectedSongs, querySongsChildSong, deleteSongSelectedSongsAll, deleteSongsLikeSongAll }

@@ -36,6 +36,15 @@ button {
   font-size: 16px;
 }
 
+input[type=checkbox] {
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.button {
+  cursor: pointer;
+}
+
 textarea {
   resize: none;
 }

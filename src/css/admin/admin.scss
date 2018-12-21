@@ -146,6 +146,53 @@ body {
         &.song-like-section {
           display: none;
         }
+        &.songs-like-section {
+          position: absolute;
+          top: 60px;
+          right: 0;
+          height: 100%;
+          width: 300px;
+          padding: 0 10px;
+          background: #ddd;
+          transition: all .3s ease-in-out;
+          &.hide {
+            transform: translateX(100%);
+          }
+          h1 {
+            background: $root-color;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+            span.button {
+              background: #ddd;
+              color: #e05858;
+              border-radius: 2px;
+              display: inline-flex;
+              padding: 0;
+              &.delete {
+                margin-right: 5px;
+              }
+              &.back {
+                padding-left: 5px;
+              }
+            }
+          }
+          form {
+            .row {
+              border-bottom: solid 1px #aaa;
+              &:first-child {
+                font-weight: bold;
+              }
+              label {
+                display: inline-block;
+                width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+            }
+          }
+        }
         h1 {
           margin: 15px 0;
           letter-spacing: 5px;
@@ -172,7 +219,7 @@ body {
                 position: absolute;
                 top: 0;
                 left: 480px;
-                padding: 5px;
+                padding: 3px 10px;
                 border: 1px solid #ddd;
                 border-radius: 5px;
                 background: #fff;
@@ -243,22 +290,22 @@ body {
             input:focus, span.button:hover, textarea:focus {
               box-shadow: 1px 1px 3px #ddd;
             }
-            span.button {
-              display: inline-flex;
-              align-items: center;
-              padding: 5px 1em;
-              cursor: pointer;
-              &.loading {
-                background: rgba($color: #ddd, $alpha: 1);
-                color: #fff;
-                cursor: not-allowed;
-                .loader {
-                  width: 16px;
-                  height: 16px;
-                  border: 2px solid $root-color;
-                  border-left-color: rgba(255, 255, 255, .2);
-                }
-              }
+          }
+        }
+        span.button {
+          display: inline-flex;
+          align-items: center;
+          padding: 5px 1em;
+          cursor: pointer;
+          &.loading {
+            background: rgba($color: #ddd, $alpha: 1);
+            color: #fff;
+            cursor: not-allowed;
+            .loader {
+              width: 16px;
+              height: 16px;
+              border: 2px solid $root-color;
+              border-left-color: rgba(255, 255, 255, .2);
             }
           }
         }
