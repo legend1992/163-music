@@ -56,9 +56,16 @@ function querySongsChildSong(songsId, fn) {
   let query = new AV.Query('songSongsObj');
   query.equalTo('songs', songs);
   query.find().then(function (childSong) {
-    console.log(childSong)
-    childSong = childSong.map((selected) => {
-      return { id: selected.id, songId: selected.attributes.song.id }
+    childSong = childSong.map((songSongs) => {
+      let { id, attributes: {song: { id : songId }, songName, songSinger }} = songSongs;
+      return { 
+        id: id,
+        song: {
+          id: songId,
+          name: songName,
+          singer: songSinger
+        }
+      }
     })
     fn(childSong)
   })

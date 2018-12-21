@@ -137,12 +137,15 @@ import { findAllSongs, querySongSelectedSongs, deleteSongSelectedSongsAll } from
       let { selectSong } = this.model.data;
       let targetSongsList = AV.Object.createWithoutData('SongsList', songsId);
       let songSongsObj = new AV.Object('songSongsObj');
-      songSongsObj.set('song', selectSong);
+      songSongsObj.set('song', selectSong.obj);
+      songSongsObj.set('songName', selectSong.name);
+      songSongsObj.set('songSinger', selectSong.singer);
       songSongsObj.set('songs', targetSongsList);
       songSongsObj.save().then(()=> {
         this.model.data.successIndex ++;
         if(this.model.data.successIndex===this.model.data.selectSongsEl.length) {
-          this.unLoading()
+          this.unLoading();
+          this.querySongSelectedSongs();
         }
       })
     },
@@ -156,6 +159,13 @@ import { findAllSongs, querySongSelectedSongs, deleteSongSelectedSongsAll } from
         this.model.data.loading = false;
       }, 1000)
     },
+    querySongSelectedSongs() {
+      this.model.querySongSelectedSongs(this.model.data.selectSong.id).then((data)=> {
+        this.model.data.selectSongs = data;
+        this.view.checkInputStatus(data);
+        this.model.data.selectSongsEl = this.view.el.find('input:checkbox[name="songs"]:checked');
+      })
+    },
     reset() {
       this.model.reset();
       this.view.el.show();
@@ -167,12 +177,13 @@ import { findAllSongs, querySongSelectedSongs, deleteSongSelectedSongsAll } from
       })
       window.eventHub.on('edit-song', (song)=> {
         this.reset();
-        this.model.data.selectSong = AV.Object.createWithoutData('Songs', song.id)
-        this.model.querySongSelectedSongs(song.id).then((data)=> {
-          this.model.data.selectSongs = data;
-          this.view.checkInputStatus(data);
-          this.model.data.selectSongsEl = this.view.el.find('input:checkbox[name="songs"]:checked');
-        })
+        this.model.data.selectSong = {
+          id: song.id,
+          obj: AV.Object.createWithoutData('Songs', song.id),
+          name: song.name,
+          singer: song.singer
+        }
+        this.querySongSelectedSongs()
       })
     }
   }

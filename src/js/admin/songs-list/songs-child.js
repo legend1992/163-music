@@ -1,5 +1,4 @@
 import $ from 'jquery';
-const AV = require('leancloud-storage');
 import { querySongsChildSong } from '../../public/service';
 
 {
@@ -8,11 +7,12 @@ import { querySongsChildSong } from '../../public/service';
     template: `
       <h1>歌曲列表</h1>
     `,
-    render(songsList) {
+    render(songsChildList) {
       let html = this.template;
       html += `<form>`;
-      songsList.map((songs)=> {
-        html += `<div class="row"><label><input type="checkbox" name="songs" value="${songs.id}">${songs.name}</label></div>`
+      songsChildList.map((child)=> {
+        let { id, name, singer } = child.song;
+        html += `<div class="row"><label><input type="checkbox" name="songs" value="${id}">${name}&nbsp;-&nbsp;${singer}</label></div>`
       })
       html += `<div class="row require button-wrapper">
           <div class="explain" style="margin-left:5px;">请选择歌单</div>
@@ -25,7 +25,7 @@ import { querySongsChildSong } from '../../public/service';
   let model = {
     data: {
       songsId: undefined,
-      songsList: []
+      songsChildList: []
     },
     querySongsChildSong(songsId) {
       return new Promise((resolve)=> {
@@ -50,10 +50,9 @@ import { querySongsChildSong } from '../../public/service';
       this.eventHubOn();
     },
     querySongsChildSong() {
-      this.model.querySongsChildSong(this.model.data.songsId).then((songsList)=> {
-        this.model.data.songsList = songsList;
-        this.view.render(songsList)
-        console.log(songsList)
+      this.model.querySongsChildSong(this.model.data.songsId).then((songsChildList)=> {
+        this.model.data.songsChildList = songsChildList;
+        this.view.render(songsChildList)
       })
     },
     bindEvents() {

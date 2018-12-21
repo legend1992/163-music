@@ -94,7 +94,6 @@ import { findAllSongs, deleteData } from '../../public/service';
     deleteSong(songsId, index) {
       this.loading();
       this.model.deleteSong(songsId).then(()=> {
-        console.log('删除成功');
         this.findAll()
         if(index <= this.model.data.selectedIdx) {
           this.model.data.selectedIdx -= 1;
