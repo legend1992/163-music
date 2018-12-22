@@ -9,10 +9,10 @@ import { findAllSongs } from '../public/service';
       if(list.length) {
         html += '<ul>';
         list.map((item)=> {
-          html += `<li>
+          html += `<li><a href="./songs-detail.html?id=${item.id}">
             <div class="img-wrapper"><img src="${item.cover_url}" alt="music1-cover"></div>
             <p>${item.name}</p>
-          </li>`
+          </a></li>`
         })
         html += '</ul>';
       }else {

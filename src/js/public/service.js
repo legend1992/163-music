@@ -1,5 +1,11 @@
 import $ from 'jquery';
+const APP_ID = 'o3NC55gABAwll79UCrKnaCyx-gzGzoHsz';
+const APP_KEY = 'k2y1XBiRCMC0JHQJ1TtSo2By';
 const AV = require('leancloud-storage');
+AV.init({
+  appId: APP_ID,
+  appKey: APP_KEY
+});
 function getToken(fn, _this) {
   $.ajax({
     url: "http://localhost:8888/api/uptoken",
@@ -70,6 +76,14 @@ function querySongsChildSong(songsId, fn) {
     fn(childSong)
   })
 }
+function querySongsInfo(songId, fn) {
+  var query = new AV.Query('SongsList');
+  query.get(songId).then((songs)=> {
+    fn({ id: songs.id, ...songs.attributes })
+  }, (error)=> {
+    console.log('获取歌单信息失败', error)
+  })
+}
 function deleteSongSelectedSongsAll(selectSongs, fn) {
   let objects = selectSongs.map((songs)=> {
     return AV.Object.createWithoutData('songSongsObj', songs.id)
@@ -90,4 +104,4 @@ function deleteSongsLikeSongAll(selectSong, fn) {
     console.log('批量删除歌单中歌曲失败', error)
   })
 }
-export { getToken, findAllSongs, deleteData, querySongSelectedSongs, querySongsChildSong, deleteSongSelectedSongsAll, deleteSongsLikeSongAll }
+export { getToken, findAllSongs, deleteData, querySongSelectedSongs, querySongsChildSong, deleteSongSelectedSongsAll, deleteSongsLikeSongAll, querySongsInfo }

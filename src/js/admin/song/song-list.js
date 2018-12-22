@@ -3,13 +3,7 @@
  */
 import $ from 'jquery';
 import { deleteData } from '../../public/service';
-const APP_ID = 'o3NC55gABAwll79UCrKnaCyx-gzGzoHsz';
-const APP_KEY = 'k2y1XBiRCMC0JHQJ1TtSo2By';
 const AV = require('leancloud-storage');
-AV.init({
-  appId: APP_ID,
-  appKey: APP_KEY
-});
 {
   let view = {
     el: $('#song-list'),

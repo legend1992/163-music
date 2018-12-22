@@ -22,13 +22,18 @@ const htmlArray = [
   {
     name: 'admin',
     chunks: ['vendor', 'main', 'admin']
+  },
+  {
+    name: 'songs-detail',
+    chunks: ['vendor', 'main', 'songs-detail']
   }
 ];
 module.exports = {
   entry: {
     main: './src/js/main.js',
     index: './src/js/index/index.js',
-    admin: './src/js/admin/admin.js'
+    admin: './src/js/admin/admin.js',
+    'songs-detail': './src/js/index/songs-detail.js'
   },
   // 提取公共代码
   optimization: {
