@@ -6,7 +6,7 @@ AV.init({
   appId: APP_ID,
   appKey: APP_KEY
 });
-function getToken(fn, _this) {
+function getToken(fn) {
   $.ajax({
     url: "http://localhost:8888/api/uptoken",
     success: (res) => {
@@ -22,7 +22,7 @@ function getToken(fn, _this) {
         params: {},
         mimeType: null
       };
-      fn.call(_this, token, putExtra, config);
+      fn(token, putExtra, config);
     }
   })
 }
@@ -76,9 +76,9 @@ function querySongsChildSong(songsId, fn) {
     fn(childSong)
   })
 }
-function querySongsInfo(songId, fn) {
+function querySongsInfo(songsId, fn) {
   var query = new AV.Query('SongsList');
-  query.get(songId).then((songs)=> {
+  query.get(songsId).then((songs)=> {
     fn({ id: songs.id, ...songs.attributes })
   }, (error)=> {
     console.log('获取歌单信息失败', error)
@@ -104,4 +104,22 @@ function deleteSongsLikeSongAll(selectSong, fn) {
     console.log('批量删除歌单中歌曲失败', error)
   })
 }
-export { getToken, findAllSongs, deleteData, querySongSelectedSongs, querySongsChildSong, deleteSongSelectedSongsAll, deleteSongsLikeSongAll, querySongsInfo }
+function querySongInfo(songId, fn) {
+  var query = new AV.Query('Songs');
+  query.get(songId).then((song)=> {
+    fn({ id: song.id, ...song.attributes })
+  }, (error)=> {
+    console.log('获取歌曲信息失败', error)
+  })
+}
+export { 
+  getToken,
+  findAllSongs,
+  deleteData,
+  querySongSelectedSongs,
+  querySongsChildSong,
+  deleteSongSelectedSongsAll,
+  deleteSongsLikeSongAll,
+  querySongsInfo,
+  querySongInfo
+}

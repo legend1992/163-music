@@ -201,7 +201,9 @@ const SaveSongsListObj = AV.Object.extend('SongsList');
       })
     },
     getToken() {
-      getToken(this.bindFileChange, this)
+      getToken((token, putExtra, config)=> {
+        this.bindFileChange(token, putExtra, config)
+      })
     },
     bindFileChange(token, putExtra, config) {
       this.view.el.on("change", "#select-file", (e)=> {

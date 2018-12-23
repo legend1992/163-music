@@ -26,6 +26,10 @@ const htmlArray = [
   {
     name: 'songs-detail',
     chunks: ['vendor', 'main', 'songs-detail']
+  },
+  {
+    name: 'song-play',
+    chunks: ['vendor', 'main', 'song-play']
   }
 ];
 module.exports = {
@@ -33,7 +37,8 @@ module.exports = {
     main: './src/js/main.js',
     index: './src/js/index/index.js',
     admin: './src/js/admin/admin.js',
-    'songs-detail': './src/js/index/songs-detail.js'
+    'songs-detail': './src/js/index/songs-detail.js',
+    'song-play': './src/js/index/song-play.js'
   },
   // 提取公共代码
   optimization: {

@@ -10,11 +10,11 @@ const AV = require('leancloud-storage');
         html += '<ul>';
         list.map((item)=> {
           item.remark = item.remark ? '('+item.remark+')' : item.remark;
-          html += `<li data-song-id=${item.id} title="${item.name}">
+          html += `<li title="${item.name}"><a href="./song-play.html?id=${item.id}">
             <h4>${item.name}<span class="remark">${item.remark||''}</span></h4>
             <p><i class="icon-SQ icon"></i><span>${item.singer||'歌手(未知)'}</span> - <span>${item.album||'专辑(未知)'}</span></p>
             <i class="icon-play icon"></i>
-          </li>`
+          </a></li>`
         })
         html += '</ul>';
       }else {

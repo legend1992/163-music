@@ -152,45 +152,48 @@ main {
           position: relative;
           padding: .12rem 0.84rem .1rem .2rem;
           border-bottom: 1px solid rgba(0,0,0,.1);
-          h4,
-          p {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            word-break: normal;
-          }
-          h4 {
-            font-size: .34rem;
-            line-height: 1.48;
-            span.remark {
+          >a {
+            width: 100%;
+            h4,
+            p {
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              word-break: normal;
+            }
+            h4 {
+              font-size: .34rem;
+              line-height: 1.48;
+              span.remark {
+                color: #888;
+                margin-left: .08rem;
+              }
+            }
+            p {
+              font-size: .24rem;
+              line-height: 1.5;
               color: #888;
-              margin-left: .08rem;
+              i.icon-SQ {
+                display: inline-block;
+                width: .24rem;
+                height: .16rem;
+                margin-right: .08rem;
+              }
             }
-          }
-          p {
-            font-size: .24rem;
-            line-height: 1.5;
-            color: #888;
-            i.icon-SQ {
+            i.icon {
+              background: url(//s3.music.126.net/m/s/img/index_icon_2x.png?5207a28…) no-repeat;
+              background-size: 3.32rem 1.94rem;
+            }
+            i.icon-play {
               display: inline-block;
-              width: .24rem;
-              height: .16rem;
-              margin-right: .08rem;
+              width: .44rem;
+              height: .44rem;
+              position: absolute;
+              top: 50%;
+              right: .2rem;
+              transform: translateY(-50%);
+              background-position: -.48rem 0;
             }
-          }
-          i.icon {
-            background: url(//s3.music.126.net/m/s/img/index_icon_2x.png?5207a28…) no-repeat;
-            background-size: 3.32rem 1.94rem;
-          }
-          i.icon-play {
-            display: inline-block;
-            width: .44rem;
-            height: .44rem;
-            position: absolute;
-            top: 50%;
-            right: .2rem;
-            transform: translateY(-50%);
-            background-position: -.48rem 0;
           }
         }
       }
