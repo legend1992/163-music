@@ -15,10 +15,29 @@ body {
   font-size: .3rem;
   font-family: Helvetica, sans-serif;
   line-height: 1;
-  padding-bottom: 4rem;
   max-width: 768px;
   margin: 0 auto;
   box-shadow: 0 0 40px #000;
+  header {
+    position: relative;
+    padding: .24rem .2rem;
+    z-index: 11;
+    svg {
+      display: block;
+      height: .34rem;
+      line-height: 0;
+    }
+    i.pointer {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-16%);
+      width: 1.92rem;
+      height: 2.74rem;
+      background-image: url(//s3.music.126.net/m/s/img/needle-ip6.png?be4ebbe…);
+      background-size: contain;
+    }
+  }
   #app {
     overflow-x: hidden;
     #background {
@@ -34,28 +53,9 @@ body {
       transform: scale(1.5);
       filter: blur(24px);
     }
-    header {
-      position: relative;
-      padding: .24rem .2rem;
-      z-index: 11;
-      svg {
-        display: block;
-        height: .34rem;
-        line-height: 0;
-      }
-      i.pointer {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        transform: translateX(-16%);
-        width: 1.92rem;
-        height: 2.74rem;
-        background-image: url(//s3.music.126.net/m/s/img/needle-ip6.png?be4ebbe…);
-        background-size: contain;
-      }
-    }
     main {
       padding-top: .58rem;
+      overflow: hidden;
       .dist-wrapper {
         position: relative;
         width: 5.92rem;
@@ -81,6 +81,7 @@ body {
           top: 50%;
           left: 50%;
           transform: translate3d(-50%, -50%, 0);
+          z-index: 2;
           img {
             width: 100%;
             border-radius: 50%;
@@ -111,46 +112,45 @@ body {
           text-overflow: ellipsis;
         }
         .lyrics-wrapper {
+          height: 3em;
           margin-top: 0.28rem;
           font-size: .32rem;
-          line-height: 1.5;
           overflow: hidden;
-          height: .86rem;
           .lyrics-inner-wrapper {
             transition: all .3s ease;
           }
         }
       }
     }
-    footer {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: .2rem;
-      z-index: 20;
-      padding: 0 .2rem;
-      button {
-        display: inline-block;
-        padding: .2rem .12rem;
-        width: 3.45rem;
-        border: 1px solid #adadad;
-        border-radius: .8rem;
-        font-size: .36rem;
-        background-color: transparent;
-        text-align: center;
-        box-sizing: border-box;
+  }
+  footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: .2rem;
+    z-index: 20;
+    padding: 0 .2rem;
+    button {
+      display: inline-block;
+      padding: .2rem .12rem;
+      width: 3.45rem;
+      border: 1px solid #adadad;
+      border-radius: .8rem;
+      font-size: .36rem;
+      background-color: transparent;
+      text-align: center;
+      box-sizing: border-box;
+      border-color: #d33a31;
+      line-height: 1;
+      letter-spacing: 5px;
+      &:first-child {
+        margin-right: .2rem;
+        color: #d33a31;
+      }
+      &:last-child {
+        color: #fff;
+        background-color: #d33a31;
         border-color: #d33a31;
-        line-height: 1;
-        letter-spacing: 5px;
-        &:first-child {
-          margin-right: .2rem;
-          color: #d33a31;
-        }
-        &:last-child {
-          color: #fff;
-          background-color: #d33a31;
-          border-color: #d33a31;
-        }
       }
     }
   }
