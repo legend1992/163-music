@@ -150,7 +150,7 @@ import { getUrlParam } from '../public/public-method';
           this.view.play()
         }
       })
-      this.view.el.on('click', '#dist-wrapper', ()=> {
+      this.view.el.on('click', '#dist-wrapper', (e)=> {
         e.preventDefault();
         if(this.model.data.singing) {
           this.model.data.singing = false;
