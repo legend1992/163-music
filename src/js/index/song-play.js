@@ -51,6 +51,14 @@ import { getUrlParam } from '../public/public-method';
       this.el.find('#dist-wrapper').removeClass('playing').find('#dist-inner').css(
         'transform', `rotate(${deg}deg)`
       ).end().end().find('audio')[0].pause()
+    },
+    reset() {
+      this.el.find('#dist-wrapper').removeClass('playing').find('#dist-inner').css(
+        'transform', `rotate(0deg)`
+      )
+      this.el.find('.lyrics-inner-wrapper').css(
+        'transform', 'translateY(0)'
+      ).find('p:not(:nth-child(1))').removeClass('active')
     }
   };
   let model = {
@@ -66,6 +74,11 @@ import { getUrlParam } from '../public/public-method';
           lyrics: ''
         }]
       }
+    },
+    reset() {
+      this.data.singing = false;
+      this.data.activeLyricsIndex = 0;
+      this.data.playTime = 0;
     },
     querySongInfo(songsId) {
       return new Promise((resolve)=> {
@@ -99,9 +112,8 @@ import { getUrlParam } from '../public/public-method';
               }
             }
           }).on('ended', ()=> {
-            this.view.el.find('#dist-wrapper').removeClass('playing').find('#dist-inner').css(
-             'transform', `rotate(0deg)`
-            )
+            this.model.reset()
+            this.view.reset()
           })
         })
       })
