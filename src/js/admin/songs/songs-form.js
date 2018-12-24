@@ -227,6 +227,7 @@ const SaveSongsListObj = AV.Object.extend('SongsList');
     },
     eventHubOn() {
       window.eventHub.on('edit-songs', (data)=> {
+        this.reset();
         this.model.data.songsId = data.id;
         patchValue(this.model.data.songsInfo, data);
         this.view.render(this.model.data);
