@@ -142,6 +142,7 @@ import { getUrlParam } from '../public/public-method';
     },
     bindEvents() {
       this.view.el.on('click', '#play-button', (e)=> {
+        e.preventDefault();
         if(!this.model.data.singing) {
           this.model.data.singing = true;
           this.model.data.startTime = new Date().getTime()
@@ -150,6 +151,7 @@ import { getUrlParam } from '../public/public-method';
         }
       })
       this.view.el.on('click', '#dist-wrapper', ()=> {
+        e.preventDefault();
         if(this.model.data.singing) {
           this.model.data.singing = false;
           this.model.data.playTime += (new Date().getTime() - this.model.data.startTime)/1000;
