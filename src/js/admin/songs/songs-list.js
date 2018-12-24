@@ -2,7 +2,7 @@
  * this.model.data.selectedIdx可优化，直接改变被选中的li的class即可，每次重新渲染开销比较大
  */
 import $ from 'jquery';
-import { findAllSongs, deleteData } from '../../public/service';
+import { findAllSongs, deleteData, querySongsChildSong, deleteSongsLikeSongAll } from '../../public/service';
 
 {
   let view = {
@@ -72,6 +72,13 @@ import { findAllSongs, deleteData } from '../../public/service';
         })
       }, 500);
     },
+    deleteSongsLikeSongAll(songsId) {
+      querySongsChildSong(songsId, (data)=> {
+        if(data && data.length) {
+          deleteSongsLikeSongAll(data)
+        }
+      })
+    },
     loading() {
       if(!this.view.el.find('.loader-wrapper1').length) {
         this.view.el.append('<div class="loader-wrapper1"><div class="loader">Loading...</div></div>');
@@ -94,6 +101,7 @@ import { findAllSongs, deleteData } from '../../public/service';
     deleteSong(songsId, index) {
       this.loading();
       this.model.deleteSong(songsId).then(()=> {
+        this.deleteSongsLikeSongAll(songsId);
         this.findAll()
         if(index <= this.model.data.selectedIdx) {
           this.model.data.selectedIdx -= 1;

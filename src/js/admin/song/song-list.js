@@ -2,7 +2,7 @@
  * this.model.data.selectedIdx可优化，直接改变被选中的li的class即可，每次重新渲染开销比较大
  */
 import $ from 'jquery';
-import { deleteData } from '../../public/service';
+import { deleteData, querySongSelectedSongs, deleteSongSelectedSongsAll } from '../../public/service';
 const AV = require('leancloud-storage');
 {
   let view = {
@@ -50,7 +50,7 @@ const AV = require('leancloud-storage');
           resolve()
         })
       })
-    }
+    },
   }
   let controller = {
     init(view, model) {
@@ -74,6 +74,13 @@ const AV = require('leancloud-storage');
         })
       }, 500);
     },
+    deleteSongSelectedSongsAll(songId) {
+      querySongSelectedSongs(songId, (data)=> {
+        if(data && data.length) {
+          deleteSongSelectedSongsAll(data)
+        }
+      })
+    },
     loading() {
       if(!this.view.el.find('.loader-wrapper1').length) {
         this.view.el.append('<div class="loader-wrapper1"><div class="loader">Loading...</div></div>');
@@ -96,6 +103,7 @@ const AV = require('leancloud-storage');
     deleteSong(songId, index) {
       this.loading();
       this.model.deleteSong(songId).then(()=> {
+        this.deleteSongSelectedSongsAll(songId)
         if(index <= this.model.data.selectedIdx) {
           this.model.data.selectedIdx -= 1;
           if(this.model.data.selectedIdx === -1 && this.model.data.songList.length > 1) {

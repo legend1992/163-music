@@ -38,10 +38,13 @@ import { getUrlParam } from '../public/public-method';
         songsChildList.map((child, key)=> {
           let { id, name, singer, remark, album } = child.song;
           remark = remark ? '('+remark+')' : remark;
-          html += `<li data-song-id=${id} title="${name}"><i class="key">${key+1}</i>
-            <h4>${name}<span class="remark">${remark||''}</span></h4>
-            <p><i class="icon-SQ icon"></i><span>${singer||'歌手(未知)'}</span> - <span>${album||'专辑(未知)'}</span></p>
-            <i class="icon-play icon"></i>
+          html += `<li title="${name}">
+            <a href="./song-play.html?id=${id}">
+              <i class="key">${key+1}</i>
+              <h4>${name}<span class="remark">${remark||''}</span></h4>
+              <p><i class="icon-SQ icon"></i><span>${singer||'歌手(未知)'}</span> - <span>${album||'专辑(未知)'}</span></p>
+              <i class="icon-play icon"></i>
+            </a>
           </li>`
         })
         html += `</ul></div>`;

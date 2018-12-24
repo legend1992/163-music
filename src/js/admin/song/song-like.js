@@ -119,7 +119,7 @@ import { findAllSongs, querySongSelectedSongs, deleteSongSelectedSongsAll } from
         let { selectSongsEl, selectSongs } = this.model.data;
         if(selectSongsEl.length || selectSongs.length) {
           this.loading();
-          this.model.deleteSongSelectedSongsAll(selectSongs).then(()=> {
+          this.model.deleteSongSelectedSongsAll().then(()=> {
             if(selectSongsEl.length) {
               selectSongsEl.each((key, songs)=> {
                 this.saveSongs(songs.value)
